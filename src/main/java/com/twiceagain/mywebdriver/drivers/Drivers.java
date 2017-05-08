@@ -343,32 +343,32 @@ public class Drivers {
             //fp.setPreference("permissions.default.image", 2); // default is 1:load image automatically 2: block all images
 
             fp.addExtension(new File(quickJavaPath));
-            fp.setPreference("thatoneguydotnet.QuickJava.curVersion", "2.0.6.1");  // Prevents loading the 'thank you for installing screen'
+            fp.setPreference("extensions.thatoneguydotnet.QuickJava.curVersion", "2.1.0");  // Prevents loading the 'thank you for installing screen'
             if (noImage) {
                 //  Turns images off
-                fp.setPreference("thatoneguydotnet.QuickJava.startupStatus.Images", 2);
+                fp.setPreference("extensions.thatoneguydotnet.QuickJava.startupStatus.Images", 2);
                 // Turns animated images off
-                fp.setPreference("thatoneguydotnet.QuickJava.startupStatus.AnimatedImage", 2);
+                fp.setPreference("extensions.thatoneguydotnet.QuickJava.startupStatus.AnimatedImage", 2);
             }
 
             if (noCSS) {
-                fp.setPreference("thatoneguydotnet.QuickJava.startupStatus.CSS", 2);
+                fp.setPreference("extensions.thatoneguydotnet.QuickJava.startupStatus.CSS", 2);
             }
 
             if (noCookie) {
-                fp.setPreference("thatoneguydotnet.QuickJava.startupStatus.Cookies", 2);
+                fp.setPreference("extensions.thatoneguydotnet.QuickJava.startupStatus.Cookies", 2);
             }
             if (noFlash) {
-                fp.setPreference("thatoneguydotnet.QuickJava.startupStatus.Flash", 2);
+                fp.setPreference("extensions.thatoneguydotnet.QuickJava.startupStatus.Flash", 2);
             }
             if (noJava) {
-                fp.setPreference("thatoneguydotnet.QuickJava.startupStatus.Java", 2);
+                fp.setPreference("extensions.thatoneguydotnet.QuickJava.startupStatus.Java", 2);
             }
             if (noJs) {
-                fp.setPreference("thatoneguydotnet.QuickJava.startupStatus.JavaScript", 2);
+                fp.setPreference("extensions.thatoneguydotnet.QuickJava.startupStatus.JavaScript", 2);
             }
             if (noSilver) {
-                fp.setPreference("thatoneguydotnet.QuickJava.startupStatus.Silverlight", 2);
+                fp.setPreference("extensions.thatoneguydotnet.QuickJava.startupStatus.Silverlight", 2);
             }
 
             desCap.setCapability(FirefoxDriver.PROFILE, fp);
