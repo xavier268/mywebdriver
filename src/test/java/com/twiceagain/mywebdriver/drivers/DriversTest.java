@@ -11,7 +11,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 /**
  * Basic tests.
@@ -71,6 +73,20 @@ public class DriversTest {
         System.out.printf("\nOpen page (grid) : %s\n", openPage(wd));
         wd.quit();
     }
+    
+    @Test
+    public void testScreenshotLocal() {
+        WebDriver wd = Drivers.getDriver(Drivers.Config.defaultLocalFirefox());
+        System.out.printf("\nOpen page (grid) : %s\n", openPage(wd));
+        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, "FullPageGoogleWithImages.png"));
+        
+        WebElement we = wd.findElement(By.id("hplogo"));               
+        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, we, "LogoGoogle.png"));
+        
+        wd.quit();
+    }
+    
+    
 
     // ======================================================//
     protected String openPage(WebDriver wd) {

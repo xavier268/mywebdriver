@@ -5,17 +5,24 @@
  */
 package com.twiceagain.mywebdriver.drivers;
 
+import com.google.common.io.Files;
+
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -70,9 +77,130 @@ public class Drivers {
     }
 
     /**
+     * Takes a (full view) Base64 screenshoot from the provided webdriver.
+     *
+     * @param wd - the driver to shoot.
+     * @return Base64 string. You can use it directly to display inline images.
+     */
+    public static String screenshot2B64(WebDriver wd) {
+        return ((TakesScreenshot) wd).getScreenshotAs(OutputType.BASE64);
+    }
+
+    
+
+    /**
+     * Screen shot of selected element only.
+     *
+     * @param wd
+     * @param ele
+     * @return
+     * @throws IOException
+     */
+    public static File screenshot2TempFile(WebDriver wd, WebElement ele)
+            throws IOException {
+        File fi = ((TakesScreenshot) wd).getScreenshotAs(OutputType.FILE);
+        BufferedImage img = ImageIO.read(fi);
+        // Get the location of element on the page
+        Point point = ele.getLocation();
+
+        // Get width and height of the element
+        int eleWidth = ele.getSize().getWidth();
+        int eleHeight = ele.getSize().getHeight();
+
+        // Crop the entire page screenshot to get only element screenshot
+        BufferedImage eleScreenshot = img.getSubimage(point.getX(), point.getY(),
+                eleWidth, eleHeight);
+        ImageIO.write(eleScreenshot, "png", fi);
+        return fi;
+    }
+
+    /**
+     * ScreenShot into a temporary file. The temp file will disappear when the
+     * jvm stops.
+     *
+     * @param wd
+     * @return
+     */
+    public static File screenshot2TempFile(WebDriver wd) {
+        return ((TakesScreenshot) wd).getScreenshotAs(OutputType.FILE);
+    }
+
+    /**
+     * ScreenShot to the provided file as PNG.
+     *
+     * @param wd
+     * @param toFileName - file name to copy to ...
+     * @return - fileName used.
+     */
+    public static String screenshot2File(WebDriver wd, File toFileName) {
+        try {
+            File fi = screenshot2TempFile(wd);
+            Files.move(fi, toFileName);
+
+            return toFileName.getAbsolutePath();
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    /**
+     * ScreenShot to the provided file as PNG.
+     *
+     * @param wd
+     * @param ele
+     * @param toFileName - file name to copy to ...
+     * @return - fileName used.
+     */
+    public static String screenshot2File(WebDriver wd, WebElement ele, File toFileName) {
+        try {
+            File fi = screenshot2TempFile(wd, ele);
+            Files.move(fi, toFileName);
+
+            return toFileName.getAbsolutePath();
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    /**
+     * ScreenShot to the provided file as PNG.
+     *
+     * @param wd
+     * @param fileName
+     * @return - fileName used.
+     */
+    public static String screenshot2File(WebDriver wd, String fileName) {
+        return screenshot2File(wd, new File(fileName));
+    }
+
+    /**
+     * ScreenShot to the provided file as PNG.
+     *
+     * @param wd
+     * @param ele
+     * @param fileName
+     * @return - fileName used.
+     */
+    public static String screenshot2File(WebDriver wd, WebElement ele, String fileName) {
+        return screenshot2File(wd, ele, new File(fileName));
+    }
+
+    /**
      * Driver configuration object.
      */
     public static class Config {
+
+        @Override
+        public String toString() {
+            return "Config{" + "useGrid=" + useGrid + ", gridUrl=" + gridUrl
+                    + ", noImage=" + noImage + ", noCSS=" + noCSS
+                    + ", noCookie=" + noCookie + ", noFlash=" + noFlash
+                    + ", noJava=" + noJava + ", noJs=" + noJs
+                    + ", noSilver=" + noSilver + ", width=" + width
+                    + ", height=" + height + '}';
+        }
 
         /**
          * Should we use grid or local instance ?
@@ -133,39 +261,40 @@ public class Drivers {
          * Construct default configuration.
          */
         public Config() {
-            try {
-                loadFirefoxQuickJavaExtension();
-            } catch (IOException ex) {
-                LOG.log(Level.SEVERE, null, ex);
-                System.exit(0);
-            }
+
+            loadFirefoxQuickJavaExtension();
+
         }
 
         /**
          * Load (and cache) the quickJava Firefox extension.
          *
          * @return
-         * @throws MalformedURLException
-         * @throws IOException
          */
-        protected static String loadFirefoxQuickJavaExtension() throws MalformedURLException, IOException {
+        protected static String loadFirefoxQuickJavaExtension() {
 
-            final String fileName = "quickjava.xpi";
+            try {
+                final String fileName = "quickjava.xpi";
 
-            // If already loaded, do nothing.
-            if (Config.quickJavaPath != null || new File(fileName).exists()) {
-                Config.quickJavaPath = fileName;
-                LOG.log(Level.INFO, "Already loaded xpi file : {0}", Config.quickJavaPath);
+                // If already loaded, do nothing.
+                if (Config.quickJavaPath != null || new File(fileName).exists()) {
+                    Config.quickJavaPath = fileName;
+                    LOG.log(Level.INFO, "Already loaded xpi file : {0}", Config.quickJavaPath);
+                    return Config.quickJavaPath;
+                }
+
+                URL url = new URL(Config.quickJavaUrl);
+                ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+                try (FileOutputStream fos = new FileOutputStream(fileName)) {
+                    fos.getChannel().transferFrom(rbc, 0, 1_000_000L);
+                    Config.quickJavaPath = fileName;
+                }
+                LOG.log(Level.INFO, "Loaded xpi file : {0}", fileName);
                 return Config.quickJavaPath;
+            } catch (IOException ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                return null;
             }
-
-            URL url = new URL(Config.quickJavaUrl);
-            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-            FileOutputStream fos = new FileOutputStream(fileName);
-            fos.getChannel().transferFrom(rbc, 0, 1_000_000L);
-            Config.quickJavaPath = fileName;
-            LOG.log(Level.INFO, "Loaded xpi file : {0}", fileName);
-            return Config.quickJavaPath;
         }
 
         /**

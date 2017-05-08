@@ -3,3 +3,6 @@
 
 // Firefox extensions
 *.xpi
+
+// test files
+*.png
