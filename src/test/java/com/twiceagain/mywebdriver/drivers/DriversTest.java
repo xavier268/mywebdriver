@@ -5,6 +5,7 @@
  */
 package com.twiceagain.mywebdriver.drivers;
 
+import com.twiceagain.mywebdriver.drivers.Drivers.Config;
 import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -66,8 +67,7 @@ public class DriversTest {
      * Make sure grid is running on the correct url ?
      */
     @Test
-    public void testGridDefaultFirefox() {
-        
+    public void testGridDefaultFirefox() {     
         
         WebDriver wd = Drivers.getDriver(Drivers.Config.defaultGridFirefox());
         System.out.printf("\nOpen page (grid) : %s\n", openPage(wd));
@@ -77,16 +77,41 @@ public class DriversTest {
     @Test
     public void testScreenshotLocal() {
         WebDriver wd = Drivers.getDriver(Drivers.Config.defaultLocalFirefox());
-        System.out.printf("\nOpen page (grid) : %s\n", openPage(wd));
-        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, "FullPageGoogleWithImages.png"));
+        System.out.printf("\nOpen page (local) : %s\n", openPage(wd));
+        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, "local_FullPageGoogle.png"));
         
         WebElement we = wd.findElement(By.id("hplogo"));               
-        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, we, "LogoGoogle.png"));
+        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, we, "local_LogoGoogle.png"));
         
         wd.quit();
     }
     
+    @Test
+    public void testScreenshotGrid() {
+        WebDriver wd = Drivers.getDriver(Drivers.Config.defaultGridFirefox());
+        System.out.printf("\nOpen page (grid) : %s\n", openPage(wd));
+        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, "grid_FullPageGoogle.png"));
+        
+        WebElement we = wd.findElement(By.id("hplogo"));               
+        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, we, "grid_LogoGoogle.png"));
+        
+        wd.quit();
+    }
+    @Test
+    public void testScreenshotGridNoImage() {
+        Config conf = Config.defaultGridFirefox();
+        conf.noImage = true;
+        WebDriver wd = Drivers.getDriver(conf);
+        System.out.printf("\nOpen page (grid-noImage) : %s\n", openPage(wd));
+        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, "gridNoImage_FullPageGoogle.png"));
+        
+        WebElement we = wd.findElement(By.id("hplogo"));               
+        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, we, "gridNoImage_LogoGoogle.png"));
+        
+        wd.quit();
+    }
     
+   
 
     // ======================================================//
     protected String openPage(WebDriver wd) {
