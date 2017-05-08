@@ -1,0 +1,5 @@
+/nbproject/
+/target/
+
+// Firefox extensions
+*.xpi
