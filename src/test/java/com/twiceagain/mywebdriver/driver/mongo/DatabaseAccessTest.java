@@ -5,6 +5,10 @@
  */
 package com.twiceagain.mywebdriver.driver.mongo;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import org.bson.Document;
 import org.junit.Test;
 
 /**
@@ -17,8 +21,29 @@ public class DatabaseAccessTest {
     public DatabaseAccessTest() {
     }
 
+    
+    public Document createDummyDocument() {
+        Document doc = new Document("nom", "xavier")
+                .append("quand", new Date())
+                .append("maListe", Arrays.asList(1,2,3,4));
+        //System.out.printf("\nDummy document (string) : %s\n", doc);
+        //System.out.printf("\nDummy document (json) : %s\n", doc.toJson());
+        return doc;
+    }
+    
     @Test
-    public void storeDummyDocument() {
+    public void storeDummy() {
+        Document doc = createDummyDocument();
+        Mongos.getClient().getDatabase("dummydb").getCollection("dummycol").insertOne(doc);
+         }
+    
+    @Test
+    public void dumpDummy() {
+        System.out.printf("\nRetrieving content of dummydb.dummycol\n");
+        for (Document doc : Mongos.getClient().getDatabase("dummydb").getCollection("dummycol").find()){
+            System.out.printf("\n\t --> %s", doc);
+        }
+        System.out.println();
     }
 
 }
