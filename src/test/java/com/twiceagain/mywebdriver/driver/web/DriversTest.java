@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.twiceagain.mywebdriver.drivers;
+package com.twiceagain.mywebdriver.driver.web;
 
-import com.twiceagain.mywebdriver.drivers.Drivers.Config;
+import com.twiceagain.mywebdriver.driver.web.Drivers;
+import com.twiceagain.mywebdriver.driver.web.Drivers.Config;
 import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;

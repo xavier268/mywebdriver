@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.twiceagain.mymongodriver.drivers;
+package com.twiceagain.mywebdriver.driver.mongo;
 
+import com.twiceagain.mywebdriver.driver.mongo.Mongos;
 import com.mongodb.MongoTimeoutException;
 import org.junit.After;
 import org.junit.AfterClass;

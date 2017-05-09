@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.twiceagain.mywebdriver.drivers;
+package com.twiceagain.mywebdriver.driver.web;
 
 import com.google.common.io.Files;
 
