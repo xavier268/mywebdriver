@@ -5,7 +5,6 @@
  */
 package com.twiceagain.mywebdriver.driver.mongo;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import org.bson.Document;
