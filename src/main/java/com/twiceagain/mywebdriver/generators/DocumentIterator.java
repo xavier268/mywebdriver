@@ -11,7 +11,7 @@ import org.bson.Document;
 
 /**
  * Wrapper around a WebPage to generate Document objects, moving from page to
- * page as needed and seemless.
+ page as needed and seemless.
  *
  * @author xavier
  */
