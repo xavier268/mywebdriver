@@ -5,7 +5,6 @@
  */
 package com.twiceagain.mywebdriver.driver.mongo;
 
-import com.twiceagain.mywebdriver.driver.mongo.Mongos;
 import com.mongodb.MongoTimeoutException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -51,7 +50,7 @@ public class MongosTest {
     }
     
     
-    @Test(expected = MongoTimeoutException.class)
+    //@Test(expected = MongoTimeoutException.class)
     public void unknownPortConnectionStringShouldTimeout() {
         // Invalid port will time out with no other exception thrown
          Mongos.setConnection("mongodb://localhost:27777");          

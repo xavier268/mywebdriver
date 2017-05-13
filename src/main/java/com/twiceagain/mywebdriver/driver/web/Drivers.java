@@ -14,10 +14,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
@@ -86,8 +88,6 @@ public class Drivers {
         return ((TakesScreenshot) wd).getScreenshotAs(OutputType.BASE64);
     }
 
-    
-
     /**
      * Screen shot of selected element only.
      *
@@ -98,6 +98,7 @@ public class Drivers {
      */
     public static File screenshot2TempFile(WebDriver wd, WebElement ele)
             throws IOException {
+        Drivers.scrollElementIntoView(wd, ele);
         File fi = ((TakesScreenshot) wd).getScreenshotAs(OutputType.FILE);
         BufferedImage img = ImageIO.read(fi);
         // Get the location of element on the page
@@ -376,6 +377,105 @@ public class Drivers {
 
         }
 
+    }
+
+    /**
+     * Visualy mark a list of elements on the webpage.
+     *
+     * @param wd
+     * @param lwe
+     * @param message
+     * @param backrgba
+     * @param frontrgba
+     */
+    public static void flashElements(WebDriver wd, 
+            List<WebElement> lwe, 
+            String message,
+            String backrgba,
+            String frontrgba) {
+        int i = 0;
+        for (WebElement we : lwe) {
+            i++;
+            flashElement(wd, we, String.format("#%d %s", i, message, frontrgba, backrgba));
+        }
+    }
+    
+     public static void flashElements(WebDriver wd, 
+            List<WebElement> lwe, 
+            String message) {
+         int i = 0;
+        for (WebElement we : lwe) {
+            i++;
+            flashElement(wd, we, String.format("#%d %s", i, message));
+        }
+     
+     }
+ 
+
+    /**
+     * Visualy mark an element on the webPage.
+     *
+     * @param wd
+     * @param we
+     * @param innerHtml - content of message div
+     */
+    public static void flashElement(
+            WebDriver wd,
+            WebElement we,
+            String innerHtml) {
+
+        flashElement(wd, we, innerHtml, "rgba(64,64,64,0.2)", "rgba(255,0,0,1.0)");
+    }
+
+    /**
+     * Visualy mark an element on the webPage.
+     *
+     * @param wd
+     * @param we
+     * @param innerHtml - content of message dv
+     * @param backrgba - background color string : try 'red' or 'rgba(64,0,0,0.3)'
+     * @param frontrgba - front color for border and text
+     */
+    public static void flashElement(
+            WebDriver wd,
+            WebElement we,
+            String innerHtml,
+            String backrgba,
+            String frontrgba) {
+        
+        if(wd == null || we == null) return ;
+        
+        // scrollElementIntoView(wd, we);
+
+        // Get element size and location
+        int left = we.getLocation().x;
+        int top = we.getLocation().y;
+        int width = we.getSize().width;
+        int height = we.getSize().height;
+
+        final String css = String.format("color:%s;"
+                + "background-color:%s;"
+                + "border-style:dashed;border-width:2px;border-color:%s; "
+                + "position:absolute;"
+                + "top:%dpx;left:%dpx;"
+                + "width:%dpx;height:%dpx;"
+                + "z-index:1000;",
+                frontrgba, backrgba, frontrgba,
+                top, left, width, height);
+
+        final String script = String.format("elem = document.createElement('div');"
+                + "elem.innerHTML='%s';"
+                + "elem.setAttribute('style','%s');"
+                + "document.body.appendChild(elem);",
+                innerHtml, css);
+
+        ((JavascriptExecutor) wd).executeScript(script);
+    }
+    
+    public static void scrollElementIntoView(WebDriver wd, WebElement we) {
+        if(wd==null || we==null) return;
+        String script = "arguments[0].scrollIntoView();";
+        ((JavascriptExecutor)wd).executeScript(script, we);
     }
 
 }

@@ -15,7 +15,7 @@ import org.openqa.selenium.WebDriver;
  * Demo using google search to genarete basic documents.
  * @author xavier
  */
-public class DemoGoogleNews {
+public class DemoGoogleNewsDumpArticles {
 
     /**
      * @param args the command line arguments
@@ -24,10 +24,13 @@ public class DemoGoogleNews {
         
         WebDriver wd = Drivers.getDriver();
         WebPage page = new WebPageXPathImplementation(wd, "http://news.google.com")
-                .setXpDocuments(".//div[@class='esc-body']");
+                .setXpDocuments(".//div[@class='esc-body']")
+                .addDebugOverlay();
         DocumentIterator di = new DocumentIterator(page);while(di.hasNext()) {
             System.out.printf("\n%s\n", di.next().toString());
         }
+        
+        Drivers.screenshot2File(wd, "googleNewsTest.png");
         wd.close();
         
     }

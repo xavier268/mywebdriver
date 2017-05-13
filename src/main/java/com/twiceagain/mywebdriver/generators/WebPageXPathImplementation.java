@@ -5,6 +5,7 @@
  */
 package com.twiceagain.mywebdriver.generators;
 
+import com.twiceagain.mywebdriver.driver.web.Drivers;
 import com.twiceagain.mywebdriver.limiters.Limiter;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -17,8 +18,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
- * Implementation based upon xpath string settings.
- * **TODO** MISSING LIMITER IMPLEMENTATION !
+ * Implementation of a crawler on multipgae website to generate selected
+ * preconfigured Documents using xpath based setting. *TODO** MISSING LIMITER
+ * IMPLEMENTATION !
  *
  * @author xavier
  */
@@ -99,6 +101,48 @@ public class WebPageXPathImplementation implements WebPage {
         wd.get(url);
     }
 
+    /**
+     * Add an overlay for visual debugging.
+     * Ignore xpPath issues.
+     * @return
+     */
+    @SuppressWarnings("empty-statement")
+    public WebPageXPathImplementation addDebugOverlay() {
+        try {
+            if (xpDocuments != null) {
+                Drivers.flashElements(wd, wd.findElements(By.xpath(xpDocuments)), "xpDocuments", "rgba(64,0,0,0.2)", "red");
+            }
+        } catch (Exception ex) {
+        };
+
+        try {
+            if (xpHasNextPage != null) {
+                Drivers.flashElement(wd, wd.findElement(By.xpath(xpHasNextPage)), "xpHasNextPage", "rgba(0,64,0,0.2)", "red");
+            }
+        } catch (Exception ex) {
+        };
+        try {
+            if (xpNextPageClick != null) {
+                Drivers.flashElement(wd, wd.findElement(By.xpath(xpNextPageClick)), "xpNextPageClick", "rgba(0,64,0,0.4)", "yellow");
+            }
+        } catch (Exception ex) {
+        };
+        try {
+            if (xpPageLoadedMarker != null) {
+                Drivers.flashElement(wd, wd.findElement(By.xpath(xpPageLoadedMarker)), "xpPageLoadedMarker", "rgba(20,64,10,0.2)", "green");
+            }
+        } catch (Exception ex) {
+        };
+        try {
+            if (xpStalenessMarker != null) {
+                Drivers.flashElement(wd, wd.findElement(By.xpath(xpStalenessMarker)), "xpStalenessMarker", "rgba(20,64,10,0.2)", "green");
+            }
+        } catch (Exception ex) {
+        };
+
+        return this;
+    }
+
     public WebPageXPathImplementation setXpPageLoadedMarker(String xpPageLoadedMarker) {
         this.xpPageLoadedMarker = xpPageLoadedMarker;
         return this;
@@ -138,8 +182,6 @@ public class WebPageXPathImplementation implements WebPage {
         this.maxWaitSeconds = maxWaitSeconds;
         return this;
     }
-    
-    
 
     /**
      * Waits until page is fully loaded.
@@ -209,9 +251,9 @@ public class WebPageXPathImplementation implements WebPage {
         try {
             if (documentParser == null) {
                 return new Document("doctype", "text")
-                        .append("content",loadedElements.remove(0).getText());
-            }else {
-                return documentParser.toDocument(wd,loadedElements.remove(0));
+                        .append("content", loadedElements.remove(0).getText());
+            } else {
+                return documentParser.toDocument(wd, loadedElements.remove(0));
             }
         } catch (Exception ex) {
             LOG.info(ex.getMessage());
