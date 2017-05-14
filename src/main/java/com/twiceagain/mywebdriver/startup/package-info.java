@@ -6,4 +6,4 @@
 /**
  * Bootstrapping and independant commands (main classes).
  */
-package com.twiceagain.mywebdriver.demos;
+package com.twiceagain.mywebdriver.startup;
