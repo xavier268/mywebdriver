@@ -36,7 +36,7 @@ public class DemoGoogleNewsDumpArticles {
 
         // Maximize page Height, then take screenshot
         // Will crash if in grid mode ... ??!!
-        // Drivers.adjustPageHeight(wd);
+         Drivers.adjustPageHeight(wd);
         
          page.addDebugOverlay();        
         
