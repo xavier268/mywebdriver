@@ -49,5 +49,9 @@ public interface Limiter {
      * Increment site count
      */
     void incSite();
+    
+    public int countDocuments();
+    public int countPages();
+    public int countSites();
 
 }

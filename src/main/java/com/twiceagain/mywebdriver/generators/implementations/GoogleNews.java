@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-/**
- * gle - or multi - page WebPages objects that can generate or process Documents
- */
-package com.twiceagain.mywebdriver.generators;
+package com.twiceagain.mywebdriver.generators.implementations;
+
+import com.twiceagain.mywebdriver.generators.WebPageBasic;
+
+

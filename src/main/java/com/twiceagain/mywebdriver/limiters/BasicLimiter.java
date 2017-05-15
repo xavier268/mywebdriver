@@ -100,4 +100,19 @@ public class BasicLimiter implements Limiter {
 
     }
 
+    @Override
+    public int countDocuments() {
+        return curDocument;
+    }
+
+    @Override
+    public int countPages() {
+        return curPage;
+    }
+
+    @Override
+    public int countSites() {
+        return curSite;
+    }
+
 }

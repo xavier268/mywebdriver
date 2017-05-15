@@ -32,7 +32,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
  * Driver factory class.
- *
+ * // TODO - provide window resize to max vertical/horizontal size and avoid scrolling ?
  * @author xavier
  */
 public class Drivers {

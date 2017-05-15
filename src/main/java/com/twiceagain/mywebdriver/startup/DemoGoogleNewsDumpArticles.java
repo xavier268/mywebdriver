@@ -6,13 +6,13 @@
 package com.twiceagain.mywebdriver.startup;
 
 import com.twiceagain.mywebdriver.driver.web.Drivers;
-import com.twiceagain.mywebdriver.generators.DocumentIterator;
 import com.twiceagain.mywebdriver.generators.WebPage;
-import com.twiceagain.mywebdriver.generators.WebPageXPathImplementation;
+import com.twiceagain.mywebdriver.generators.WebPageBasic;
 import org.openqa.selenium.WebDriver;
 
 /**
  * Demo using google search to genarete basic documents.
+ *
  * @author xavier
  */
 public class DemoGoogleNewsDumpArticles {
@@ -21,18 +21,24 @@ public class DemoGoogleNewsDumpArticles {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+
         WebDriver wd = Drivers.getDriver();
-        WebPage page = new WebPageXPathImplementation(wd, "http://news.google.com")
+
+        WebPage page = new WebPageBasic(wd, "http://news.google.com")
                 .setXpDocuments(".//div[@class='esc-body']")
-                .addDebugOverlay();
-        DocumentIterator di = new DocumentIterator(page);while(di.hasNext()) {
-            System.out.printf("\n%s\n", di.next().toString());
-        }
+                .init();
+
+        page.processDocuments((lim, doc) -> {
+            System.out.printf("\npage : %d- document : %d\n===============\n%s\n================\n",
+                    lim.countPages(), lim.countDocuments(), doc);
+            return true;
+        });
+        page.addDebugOverlay();
         
+
         Drivers.screenshot2File(wd, "googleNewsTest.png");
         wd.close();
-        
+
     }
-    
+
 }
