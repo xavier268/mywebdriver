@@ -21,8 +21,8 @@ public class DemoGoogleNewsDumpArticles {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
-        WebDriver wd = Drivers.getDriver();
+        
+        WebDriver wd = Drivers.getDriver(Drivers.Config.defaultLocalFirefox());
 
         WebPage page = new WebPageBasic(wd, "http://news.google.com")
                 .setXpDocuments(".//div[@class='esc-body']")
@@ -33,10 +33,15 @@ public class DemoGoogleNewsDumpArticles {
                     lim.countPages(), lim.countDocuments(), doc);
             return true;
         });
-        page.addDebugOverlay();
-        
 
+        // Maximize page Height, then take screenshot
+        // Will crash if in grid mode ... ??!!
+        // Drivers.adjustPageHeight(wd);
+        
+         page.addDebugOverlay();        
+        
         Drivers.screenshot2File(wd, "googleNewsTest.png");
+        
         wd.close();
 
     }

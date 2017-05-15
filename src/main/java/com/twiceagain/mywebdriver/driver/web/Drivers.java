@@ -31,8 +31,9 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
- * Driver factory class.
- * // TODO - provide window resize to max vertical/horizontal size and avoid scrolling ?
+ * Driver factory class. // TODO - provide window resize to max
+ * vertical/horizontal size and avoid scrolling ?
+ *
  * @author xavier
  */
 public class Drivers {
@@ -254,7 +255,7 @@ public class Drivers {
          */
         public boolean noSilver = true;
         /**
-         * Defines browser woindow sizes
+         * Defines browser window sizes
          */
         public int width = 1280, height = 800;
 
@@ -388,8 +389,8 @@ public class Drivers {
      * @param backrgba
      * @param frontrgba
      */
-    public static void flashElements(WebDriver wd, 
-            List<WebElement> lwe, 
+    public static void flashElements(WebDriver wd,
+            List<WebElement> lwe,
             String message,
             String backrgba,
             String frontrgba) {
@@ -399,18 +400,17 @@ public class Drivers {
             flashElement(wd, we, String.format("#%d %s", i, message, frontrgba, backrgba));
         }
     }
-    
-     public static void flashElements(WebDriver wd, 
-            List<WebElement> lwe, 
+
+    public static void flashElements(WebDriver wd,
+            List<WebElement> lwe,
             String message) {
-         int i = 0;
+        int i = 0;
         for (WebElement we : lwe) {
             i++;
             flashElement(wd, we, String.format("#%d %s", i, message));
         }
-     
-     }
- 
+
+    }
 
     /**
      * Visualy mark an element on the webPage.
@@ -433,7 +433,8 @@ public class Drivers {
      * @param wd
      * @param we
      * @param innerHtml - content of message dv
-     * @param backrgba - background color string : try 'red' or 'rgba(64,0,0,0.3)'
+     * @param backrgba - background color string : try 'red' or
+     * 'rgba(64,0,0,0.3)'
      * @param frontrgba - front color for border and text
      */
     public static void flashElement(
@@ -442,11 +443,12 @@ public class Drivers {
             String innerHtml,
             String backrgba,
             String frontrgba) {
-        
-        if(wd == null || we == null) return ;
-        
-        // scrollElementIntoView(wd, we);
 
+        if (wd == null || we == null) {
+            return;
+        }
+
+        // scrollElementIntoView(wd, we);
         // Get element size and location
         int left = we.getLocation().x;
         int top = we.getLocation().y;
@@ -471,11 +473,41 @@ public class Drivers {
 
         ((JavascriptExecutor) wd).executeScript(script);
     }
-    
+
     public static void scrollElementIntoView(WebDriver wd, WebElement we) {
-        if(wd==null || we==null) return;
+        if (wd == null || we == null) {
+            return;
+        }
         String script = "arguments[0].scrollIntoView();";
-        ((JavascriptExecutor)wd).executeScript(script, we);
+        ((JavascriptExecutor) wd).executeScript(script, we);
     }
 
+    /**
+     * Get an estimate of the document page height (beyond the viewport).   
+     * Caution : this seems to crash the browser when run in Grid mode ...
+     * @param wd
+     * @return 
+     */
+    public static int getPageHeigth(WebDriver wd) {
+        String script = "var body = document.bodyvar;"
+                + "html = document.documentElement;"
+                + "return Math.max( document.body.scrollHeight, document.body.offsetHeight,"
+                + "document.documentElement.clientHeight, document.documentElement.scrollHeight,"
+                + "document.documentElement.offsetHeight );";
+    
+             Long res = (Long) ((JavascriptExecutor) wd).executeScript(script);  
+             return res.intValue();
+        }
+
+    /**
+     * Adjust page height to ensure there are no vertical scrollbars.
+     * Caution : this seems to crash the browser when run in Grid mode ...
+     * @param wd 
+     */
+    public static void adjustPageHeight(WebDriver wd) {        
+        int ww = wd.manage().window().getSize().width;
+        int hh = wd.manage().window().getSize().height;
+        hh = Math.max(hh, Drivers.getPageHeigth(wd)+200);
+        wd.manage().window().setSize(new Dimension(ww,hh));        
+    }
 }

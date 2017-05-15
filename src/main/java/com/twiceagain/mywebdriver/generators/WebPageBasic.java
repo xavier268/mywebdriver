@@ -92,7 +92,7 @@ public class WebPageBasic implements WebPage {
      */
     @Override
     public WebPageBasic init() {
-        
+
         limiter.incPage();
 
         // wait for pageLoaded criteria
@@ -101,6 +101,7 @@ public class WebPageBasic implements WebPage {
                 (new WebDriverWait(wd, maxWaitSeconds))
                         .until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpPageLoadedMarker)));
             } catch (Exception ex) {
+                LOG.info(ex.getLocalizedMessage());
                 // ignore ..
             }
         }
@@ -111,6 +112,8 @@ public class WebPageBasic implements WebPage {
             loadedElements = wd.findElements(By.xpath(xpDocuments));
         } catch (Exception ex) {
             loadedElements = null;
+            LOG.info(ex.getLocalizedMessage());
+
         }
         return this;
 
@@ -142,6 +145,7 @@ public class WebPageBasic implements WebPage {
                 wd.findElement(By.xpath(xpHasNextPage));
             } catch (Exception ex) {
                 loadedElements = null;
+                LOG.info(ex.getLocalizedMessage());
                 return false;
             }
         }
@@ -153,6 +157,7 @@ public class WebPageBasic implements WebPage {
                 stale = wd.findElement(By.xpath(xpStalenessMarker));
             } catch (Exception ex) {
                 stale = null;
+                LOG.info(ex.getLocalizedMessage());
                 // ignore ...
             }
         }
@@ -163,6 +168,7 @@ public class WebPageBasic implements WebPage {
                 wd.findElement(By.xpath(xpNextPageClick)).click();
             } catch (Exception ex) {
                 loadedElements = null;
+                LOG.info(ex.getLocalizedMessage());
                 return false;
             }
         }
@@ -173,6 +179,8 @@ public class WebPageBasic implements WebPage {
                 (new WebDriverWait(wd, maxWaitSeconds))
                         .until(ExpectedConditions.stalenessOf(stale));
             } catch (Exception ex) {
+                LOG.info(ex.getLocalizedMessage());
+
                 // ignore ...
             }
         }
@@ -239,7 +247,6 @@ public class WebPageBasic implements WebPage {
      *
      * @return
      */
-    @SuppressWarnings("empty-statement")
     @Override
     public WebPageBasic addDebugOverlay() {
         try {
@@ -247,32 +254,38 @@ public class WebPageBasic implements WebPage {
                 Drivers.flashElements(wd, wd.findElements(By.xpath(xpDocuments)), "xpDocuments", "rgba(64,0,0,0.2)", "red");
             }
         } catch (Exception ex) {
-        };
+            LOG.info(ex.getLocalizedMessage());
+
+        }
 
         try {
             if (xpHasNextPage != null) {
                 Drivers.flashElement(wd, wd.findElement(By.xpath(xpHasNextPage)), "xpHasNextPage", "rgba(0,64,0,0.2)", "red");
             }
         } catch (Exception ex) {
-        };
+            LOG.info(ex.getLocalizedMessage());
+        }
         try {
             if (xpNextPageClick != null) {
                 Drivers.flashElement(wd, wd.findElement(By.xpath(xpNextPageClick)), "xpNextPageClick", "rgba(0,64,0,0.4)", "yellow");
             }
         } catch (Exception ex) {
-        };
+            LOG.info(ex.getLocalizedMessage());
+        }
         try {
             if (xpPageLoadedMarker != null) {
                 Drivers.flashElement(wd, wd.findElement(By.xpath(xpPageLoadedMarker)), "xpPageLoadedMarker", "rgba(20,64,10,0.2)", "green");
             }
         } catch (Exception ex) {
-        };
+            LOG.info(ex.getLocalizedMessage());
+        }
         try {
             if (xpStalenessMarker != null) {
                 Drivers.flashElement(wd, wd.findElement(By.xpath(xpStalenessMarker)), "xpStalenessMarker", "rgba(20,64,10,0.2)", "green");
             }
         } catch (Exception ex) {
-        };
+            LOG.info(ex.getLocalizedMessage());
+        }
 
         return this;
     }
