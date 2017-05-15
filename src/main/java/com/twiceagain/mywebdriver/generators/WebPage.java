@@ -22,7 +22,7 @@ public interface WebPage extends Iterator<Document> {
     
     /**
      * Process the documents, applying the provided functionnal inteface.
-     * @param documentProcessor - consumes a Document, returning a Boolean (true = success)
+     * @param documentProcessor - consumes a Document, returning a Boolean (true = success, continue, false = stop, do not proceed)
      * @return true on success.
      */
     public boolean processDocuments(BiFunction<Limiter, Document, Boolean> documentProcessor);
