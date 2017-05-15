@@ -8,6 +8,7 @@ package com.twiceagain.mywebdriver.startup;
 import com.twiceagain.mywebdriver.driver.web.Drivers;
 import com.twiceagain.mywebdriver.generators.WebPage;
 import com.twiceagain.mywebdriver.generators.WebPageBasic;
+import com.twiceagain.mywebdriver.generators.implementations.DocumentPrinter;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -28,11 +29,7 @@ public class DemoGoogleNewsDumpArticles {
                 .setXpDocuments(".//div[@class='esc-body']")
                 .init("http://news.google.com");
 
-        page.processDocuments((lim, doc) -> {
-            System.out.printf("\npage : %d- document : %d\n===============\n%s\n================\n",
-                    lim.countPages(), lim.countDocuments(), doc);
-            return true;
-        });
+        page.processDocuments(new DocumentPrinter());
 
         // Maximize page Height, then take screenshot
         // Will crash if in grid mode ... ??!!
