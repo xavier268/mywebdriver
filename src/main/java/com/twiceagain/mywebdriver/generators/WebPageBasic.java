@@ -20,8 +20,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
- * Abstract structure for a multipage document processing object. **TODO**
- * rajouter Limiter, update tests
+ * Base structure for a multipage document processing object. You typically
+ create the WebPageBasic with an existing WebDriver, set the xpath parameters
+ and the other parameters, and finish with preloadElements(url).
+ *
  *
  * @author xavier
  */
@@ -78,20 +80,13 @@ public class WebPageBasic implements WebPage {
         limiter.incSite();
     }
 
-    public WebPageBasic(WebDriver wd, String url) {
-        this.wd = wd;
-        wd.get(url);
-        limiter.incSite();
-    }
-
     /**
      * Preload elements from current page, or any other initialisation required
      * for each new page.
      *
      * @return - this page.
      */
-    @Override
-    public WebPageBasic init() {
+    protected WebPageBasic preloadElements() {
 
         limiter.incPage();
 
@@ -185,7 +180,7 @@ public class WebPageBasic implements WebPage {
             }
         }
 
-        init();
+        preloadElements();
         return loadedElements != null;
     }
 
@@ -343,6 +338,13 @@ public class WebPageBasic implements WebPage {
     @Override
     public WebPageBasic setMaxWaitSeconds(int maxWaitSeconds) {
         this.maxWaitSeconds = maxWaitSeconds;
+        return this;
+    }
+
+    @Override
+    public WebPageBasic init(String url) {
+        wd.get(url);
+        preloadElements();
         return this;
     }
 

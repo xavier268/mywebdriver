@@ -11,7 +11,7 @@ import com.twiceagain.mywebdriver.generators.WebPageBasic;
 import org.openqa.selenium.WebDriver;
 
 /**
- * Demo using google search to genarete basic documents.
+ * Demo using google search to generate basic documents.
  *
  * @author xavier
  */
@@ -21,12 +21,12 @@ public class DemoGoogleNewsDumpArticles {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+
         WebDriver wd = Drivers.getDriver(Drivers.Config.defaultLocalFirefox());
 
-        WebPage page = new WebPageBasic(wd, "http://news.google.com")
+        WebPage page = new WebPageBasic(wd)
                 .setXpDocuments(".//div[@class='esc-body']")
-                .init();
+                .init("http://news.google.com");
 
         page.processDocuments((lim, doc) -> {
             System.out.printf("\npage : %d- document : %d\n===============\n%s\n================\n",
@@ -36,12 +36,12 @@ public class DemoGoogleNewsDumpArticles {
 
         // Maximize page Height, then take screenshot
         // Will crash if in grid mode ... ??!!
-         Drivers.adjustPageHeight(wd);
-        
-         page.addDebugOverlay();        
-        
+        Drivers.adjustPageHeight(wd);
+
+        page.addDebugOverlay();
+
         Drivers.screenshot2File(wd, "googleNewsTest.png");
-        
+
         wd.close();
 
     }

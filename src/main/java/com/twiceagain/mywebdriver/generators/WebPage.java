@@ -8,7 +8,6 @@ package com.twiceagain.mywebdriver.generators;
 import com.twiceagain.mywebdriver.limiters.Limiter;
 import java.util.Iterator;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import org.bson.Document;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -44,14 +43,14 @@ public interface WebPage extends Iterator<Document> {
      */
     public void close();
 
+    
+    
     /**
-     * Preload elements from current page, or any other initialisation required
-     * for each new page.
-     *
-     * @return - false if exception occured, tru if ok (even with no document
-     * loaded)
+     * Load the first page.
+     * @param url
+     * @return 
      */
-    WebPageBasic init();
+    WebPageBasic init(String url);
 
     @Override
     Document next();
