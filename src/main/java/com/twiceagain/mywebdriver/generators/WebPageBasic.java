@@ -89,6 +89,7 @@ public class WebPageBasic implements WebPage {
     protected WebPageBasic preloadElements() {
 
         limiter.incPage();
+        //System.out.printf("\nDEBUG : preloading elements, page = \n");
 
         // wait for pageLoaded criteria
         if (xpPageLoadedMarker != null) {
@@ -123,8 +124,7 @@ public class WebPageBasic implements WebPage {
     public boolean goToNextPage() {
         if (limiter.shouldStop()) {
             return false;
-        }
-        limiter.incPage();
+        }       
 
         // When pages never have next pages.
         if (xpNextPageClick == null) {
@@ -132,8 +132,7 @@ public class WebPageBasic implements WebPage {
             return false;
         }
 
-        WebElement stale;
-
+        
         // check for hasNextPage, if it is defined
         if (xpHasNextPage != null) {
             try {
@@ -146,10 +145,10 @@ public class WebPageBasic implements WebPage {
         }
 
         // Identify staleness marker
-        stale = null;
+        WebElement stale = null;
         if (xpStalenessMarker != null) {
             try {
-                stale = wd.findElement(By.xpath(xpStalenessMarker));
+                stale = wd.findElements(By.xpath(xpStalenessMarker)).get(0);                
             } catch (Exception ex) {
                 stale = null;
                 LOG.info(ex.getLocalizedMessage());
@@ -175,7 +174,6 @@ public class WebPageBasic implements WebPage {
                         .until(ExpectedConditions.stalenessOf(stale));
             } catch (Exception ex) {
                 LOG.info(ex.getLocalizedMessage());
-
                 // ignore ...
             }
         }

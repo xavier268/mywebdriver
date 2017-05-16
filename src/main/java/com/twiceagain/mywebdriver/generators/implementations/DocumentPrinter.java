@@ -35,19 +35,19 @@ public class DocumentPrinter implements BiFunction<Limiter, Document, Boolean> {
             if (lim.shouldStop()) {
                 return false;
             }
-            System.out.printf("\nPage %s  Document %s"
+            System.out.printf("\nPage %s  Document %s Elapsed : %s sec"
                     + "\n=======================\n"
                     + "%s"
                     + "\n=======================\n",
-                    lim.countPages(), lim.countDocuments(), doc);
+                    lim.countPages(), lim.countDocuments(),lim.getElapsedTime()/1000., doc);
             return lim.shouldContinue();
         } else {
             // lim is null ...
-            System.out.printf("\nPage %s  Document %s"
+            System.out.printf("\nPage %s  Document %s Elapsed %s sec"
                     + "\n=======================\n"
                     + "%s"
                     + "\n=======================\n",
-                    "??", "??", doc);
+                    "??", "??","??", doc);
             return true;
         }
 
