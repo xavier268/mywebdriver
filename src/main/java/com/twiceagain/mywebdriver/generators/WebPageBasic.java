@@ -332,10 +332,9 @@ public class WebPageBasic implements WebPage {
     }
 
     @Override
-    public WebPageBasic init(String url) {
+    public void init(String url) {
         wd.get(url);
-        preloadElements();
-        return this;
+        preloadElements();        
     }
 
 }

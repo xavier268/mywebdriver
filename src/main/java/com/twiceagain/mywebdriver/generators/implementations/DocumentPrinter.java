@@ -21,7 +21,7 @@ public class DocumentPrinter implements BiFunction<Limiter, Document, Boolean> {
 
     /**
      * Used to process all the generated documents, one by one.
-     * 
+     *
      * @param lim
      * @param doc
      * @return false to stop processing.
@@ -35,11 +35,12 @@ public class DocumentPrinter implements BiFunction<Limiter, Document, Boolean> {
             if (lim.shouldStop()) {
                 return false;
             }
-            System.out.printf("\nPage %s  Document %s Elapsed : %s sec"
+            System.out.printf("\nPage %s  Document %s Elapsed : %s sec (%.3f docs/sec)"
                     + "\n=======================\n"
                     + "%s"
                     + "\n=======================\n",
-                    lim.countPages(), lim.countDocuments(),lim.getElapsedTime()/1000., doc);
+                    lim.countPages(), lim.countDocuments(), lim.getElapsedTime() / 1000.,
+                    1000. * lim.countDocuments() / lim.getElapsedTime(), doc);
             return lim.shouldContinue();
         } else {
             // lim is null ...
@@ -47,7 +48,7 @@ public class DocumentPrinter implements BiFunction<Limiter, Document, Boolean> {
                     + "\n=======================\n"
                     + "%s"
                     + "\n=======================\n",
-                    "??", "??","??", doc);
+                    "??", "??", "??", doc);
             return true;
         }
 

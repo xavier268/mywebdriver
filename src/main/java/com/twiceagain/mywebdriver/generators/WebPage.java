@@ -47,10 +47,9 @@ public interface WebPage extends Iterator<Document> {
     
     /**
      * Load the first page.
-     * @param url
-     * @return 
+     * @param url 
      */
-    WebPageBasic init(String url);
+    void init(String url);
 
     @Override
     Document next();
