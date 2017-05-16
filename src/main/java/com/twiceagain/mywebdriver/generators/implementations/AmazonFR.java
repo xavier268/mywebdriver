@@ -58,7 +58,7 @@ public class AmazonFR extends WebPageBasic {
 
         @Override
         public Document apply(WebDriver wd, WebElement we) {
-            Document doc = new Document("doctype", "www.amazon.fr");
+            Document doc = new Document("doctype", DocumentParser.class.getCanonicalName());
 
             try {
                 doc.append("title", we.findElement(By.tagName("h2")).getText());

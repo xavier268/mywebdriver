@@ -46,7 +46,7 @@ public class PagesBlanches extends WebPageBasic {
                 return null;
             }
 
-            Document doc = new Document("doctype", "pagesblanches");
+            Document doc = new Document("doctype", DocumentParser.class.getCanonicalName());
 
             try {
                 doc.append(
