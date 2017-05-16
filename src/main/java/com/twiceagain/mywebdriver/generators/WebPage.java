@@ -58,21 +58,21 @@ public interface WebPage extends Iterator<Document> {
     @Override
     boolean hasNext();
 
-    WebPageBasic setDocumentParser(BiFunction<WebDriver, WebElement, Document> documentParser);
+    void setDocumentParser(BiFunction<WebDriver, WebElement, Document> documentParser);
 
-    WebPageBasic setLimiter(Limiter limiter);
+    void setLimiter(Limiter limiter);
 
-    WebPageBasic setMaxWaitSeconds(int maxWaitSeconds);
+    void setMaxWaitSeconds(int maxWaitSeconds);
 
-    WebPageBasic setXpDocuments(String xpDocuments);
+    void setXpDocuments(String xpDocuments);
 
-    WebPageBasic setXpHasNextPage(String xpHasNextPage);
+    void setXpHasNextPage(String xpHasNextPage);
 
-    WebPageBasic setXpNextPageClick(String xpNextPageClick);
+    void setXpNextPageClick(String xpNextPageClick);
 
-    WebPageBasic setXpPageLoadedMarker(String xpPageLoadedMarker);
+    void setXpPageLoadedMarker(String xpPageLoadedMarker);
 
-    WebPageBasic setXpStalenessMarker(String xpStalenessMarker);
+    void setXpStalenessMarker(String xpStalenessMarker);
     
     
 

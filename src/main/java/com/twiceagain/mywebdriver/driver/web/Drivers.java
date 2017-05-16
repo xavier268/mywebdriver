@@ -389,7 +389,7 @@ public class Drivers {
      * @param backrgba
      * @param frontrgba
      */
-    public static void flashElements(WebDriver wd,
+    public static void highlightElements(WebDriver wd,
             List<WebElement> lwe,
             String message,
             String backrgba,
@@ -397,17 +397,22 @@ public class Drivers {
         int i = 0;
         for (WebElement we : lwe) {
             i++;
-            flashElement(wd, we, String.format("#%d %s", i, message, frontrgba, backrgba));
+            highlightElement(wd, we, String.format("#%d %s", i, message, frontrgba, backrgba));
         }
     }
-
-    public static void flashElements(WebDriver wd,
+/**
+ * Highlight selected elements.
+ * @param wd
+ * @param lwe
+ * @param message 
+ */
+    public static void highlightElements(WebDriver wd,
             List<WebElement> lwe,
             String message) {
         int i = 0;
         for (WebElement we : lwe) {
             i++;
-            flashElement(wd, we, String.format("#%d %s", i, message));
+            highlightElement(wd, we, String.format("#%d %s", i, message));
         }
 
     }
@@ -419,12 +424,12 @@ public class Drivers {
      * @param we
      * @param innerHtml - content of message div
      */
-    public static void flashElement(
+    public static void highlightElement(
             WebDriver wd,
             WebElement we,
             String innerHtml) {
 
-        flashElement(wd, we, innerHtml, "rgba(64,64,64,0.2)", "rgba(255,0,0,1.0)");
+        highlightElement(wd, we, innerHtml, "rgba(64,64,64,0.2)", "rgba(255,0,0,1.0)");
     }
 
     /**
@@ -437,7 +442,7 @@ public class Drivers {
      * 'rgba(64,0,0,0.3)'
      * @param frontrgba - front color for border and text
      */
-    public static void flashElement(
+    public static void highlightElement(
             WebDriver wd,
             WebElement we,
             String innerHtml,
@@ -473,7 +478,11 @@ public class Drivers {
 
         ((JavascriptExecutor) wd).executeScript(script);
     }
-
+/**
+ * Scroll to make element visible.
+ * @param wd
+ * @param we 
+ */
     public static void scrollElementIntoView(WebDriver wd, WebElement we) {
         if (wd == null || we == null) {
             return;

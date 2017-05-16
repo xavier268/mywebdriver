@@ -32,8 +32,15 @@ public class Mongos {
      * Internal, singleton instance for client.
      */
     protected static MongoClient client = null;
+    /**
+     * Mongo connection string. 
+     */
     protected static String connection = "mongodb://localhost:27017";
 
+    /**
+     * Get a (singleton) instance of the Mongo client.
+     * @return 
+     */
     public static MongoClient getClient() {
         if (client == null) {
             client = new MongoClient(new MongoClientURI(connection));

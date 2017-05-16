@@ -6,14 +6,13 @@
 package com.twiceagain.mywebdriver.startup;
 
 import com.twiceagain.mywebdriver.driver.web.Drivers;
-import com.twiceagain.mywebdriver.generators.WebPage;
 import com.twiceagain.mywebdriver.generators.implementations.DocumentPrinter;
 import com.twiceagain.mywebdriver.generators.implementations.PagesBlanches;
 import com.twiceagain.mywebdriver.limiters.BasicLimiter;
 import org.openqa.selenium.WebDriver;
 
 /**
- *
+ * Connector to access French  phone directory assistance for individuals.
  * @author xavier
  */
 public class DemoPagesBlanches {
@@ -26,8 +25,8 @@ public class DemoPagesBlanches {
         WebDriver wd = Drivers.getDriver(Drivers.Config.defaultLocalFirefox());
 
         PagesBlanches page = new PagesBlanches(wd);
-        page.setLimiter(new BasicLimiter(null, 1000, 6, null));
-        page.init("dupont", "paris");
+        page.setLimiter(new BasicLimiter(null, 200, 6, null));
+        page.init("dupont", "sceaux");
 
         page.processDocuments(new DocumentPrinter());
 

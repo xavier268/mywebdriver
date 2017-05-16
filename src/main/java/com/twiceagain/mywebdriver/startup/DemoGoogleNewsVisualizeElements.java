@@ -26,7 +26,7 @@ public class DemoGoogleNewsVisualizeElements {
         wd.get("https://news.google.com");
         //Thread.sleep(2000);
         List<WebElement> lwe = wd.findElements(By.xpath(".//div[@class='esc-body']"));
-        Drivers.flashElements(wd, lwe ,"article");    
+        Drivers.highlightElements(wd, lwe ,"article");    
         Thread.sleep(5000);// wait 5 secs
         wd.close();
     }

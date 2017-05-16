@@ -25,9 +25,9 @@ public class DemoGoogleNewsDumpArticles {
 
         WebDriver wd = Drivers.getDriver(Drivers.Config.defaultLocalFirefox());
 
-        WebPage page = new WebPageBasic(wd)
-                .setXpDocuments(".//div[@class='esc-body']")
-                .init("http://news.google.com");
+        WebPage page = new WebPageBasic(wd);
+        page.setXpDocuments(".//div[@class='esc-body']");
+        page.init("http://news.google.com");
 
         page.processDocuments(new DocumentPrinter());
 

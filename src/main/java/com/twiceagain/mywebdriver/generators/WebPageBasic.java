@@ -244,7 +244,7 @@ public class WebPageBasic implements WebPage {
     public WebPageBasic addDebugOverlay() {
         try {
             if (xpDocuments != null) {
-                Drivers.flashElements(wd, wd.findElements(By.xpath(xpDocuments)), "xpDocuments", "rgba(64,0,0,0.2)", "red");
+                Drivers.highlightElements(wd, wd.findElements(By.xpath(xpDocuments)), "xpDocuments", "rgba(64,0,0,0.2)", "red");
             }
         } catch (Exception ex) {
             LOG.info(ex.getLocalizedMessage());
@@ -253,28 +253,28 @@ public class WebPageBasic implements WebPage {
 
         try {
             if (xpHasNextPage != null) {
-                Drivers.flashElement(wd, wd.findElement(By.xpath(xpHasNextPage)), "xpHasNextPage", "rgba(0,64,0,0.2)", "red");
+                Drivers.highlightElement(wd, wd.findElement(By.xpath(xpHasNextPage)), "xpHasNextPage", "rgba(0,64,0,0.2)", "red");
             }
         } catch (Exception ex) {
             LOG.info(ex.getLocalizedMessage());
         }
         try {
             if (xpNextPageClick != null) {
-                Drivers.flashElement(wd, wd.findElement(By.xpath(xpNextPageClick)), "xpNextPageClick", "rgba(0,64,0,0.4)", "yellow");
+                Drivers.highlightElement(wd, wd.findElement(By.xpath(xpNextPageClick)), "xpNextPageClick", "rgba(0,64,0,0.4)", "yellow");
             }
         } catch (Exception ex) {
             LOG.info(ex.getLocalizedMessage());
         }
         try {
             if (xpPageLoadedMarker != null) {
-                Drivers.flashElement(wd, wd.findElement(By.xpath(xpPageLoadedMarker)), "xpPageLoadedMarker", "rgba(20,64,10,0.2)", "green");
+                Drivers.highlightElement(wd, wd.findElement(By.xpath(xpPageLoadedMarker)), "xpPageLoadedMarker", "rgba(20,64,10,0.2)", "green");
             }
         } catch (Exception ex) {
             LOG.info(ex.getLocalizedMessage());
         }
         try {
             if (xpStalenessMarker != null) {
-                Drivers.flashElement(wd, wd.findElement(By.xpath(xpStalenessMarker)), "xpStalenessMarker", "rgba(20,64,10,0.2)", "green");
+                Drivers.highlightElement(wd, wd.findElement(By.xpath(xpStalenessMarker)), "xpStalenessMarker", "rgba(20,64,10,0.2)", "green");
             }
         } catch (Exception ex) {
             LOG.info(ex.getLocalizedMessage());
@@ -292,51 +292,43 @@ public class WebPageBasic implements WebPage {
     }
 
     @Override
-    public WebPageBasic setXpPageLoadedMarker(String xpPageLoadedMarker) {
+    public void setXpPageLoadedMarker(String xpPageLoadedMarker) {
         this.xpPageLoadedMarker = xpPageLoadedMarker;
-        return this;
     }
 
     @Override
-    public WebPageBasic setXpHasNextPage(String xpHasNextPage) {
+    public void setXpHasNextPage(String xpHasNextPage) {
         this.xpHasNextPage = xpHasNextPage;
-        return this;
     }
 
     @Override
-    public WebPageBasic setXpNextPageClick(String xpNextPageClick) {
+    public void setXpNextPageClick(String xpNextPageClick) {
         this.xpNextPageClick = xpNextPageClick;
-        return this;
     }
 
     @Override
-    public WebPageBasic setXpStalenessMarker(String xpStalenessMarker) {
+    public void setXpStalenessMarker(String xpStalenessMarker) {
         this.xpStalenessMarker = xpStalenessMarker;
-        return this;
     }
 
     @Override
-    public WebPageBasic setXpDocuments(String xpDocuments) {
+    public void setXpDocuments(String xpDocuments) {
         this.xpDocuments = xpDocuments;
-        return this;
     }
 
     @Override
-    public WebPageBasic setLimiter(Limiter limiter) {
+    public void setLimiter(Limiter limiter) {
         this.limiter = limiter;
-        return this;
     }
 
     @Override
-    public WebPageBasic setDocumentParser(BiFunction<WebDriver, WebElement, Document> documentParser) {
+    public void setDocumentParser(BiFunction<WebDriver, WebElement, Document> documentParser) {
         this.documentParser = documentParser;
-        return this;
     }
 
     @Override
-    public WebPageBasic setMaxWaitSeconds(int maxWaitSeconds) {
+    public void setMaxWaitSeconds(int maxWaitSeconds) {
         this.maxWaitSeconds = maxWaitSeconds;
-        return this;
     }
 
     @Override
