@@ -4,6 +4,6 @@
  * and open the template in the editor.
  */
 /**
- * Single - or multi - page WebPages objects that can generate or process Documents.
+ * Generic single- or multi-page WebPages objects that can generate or process Documents.
  */
 package com.twiceagain.mywebdriver.generators;

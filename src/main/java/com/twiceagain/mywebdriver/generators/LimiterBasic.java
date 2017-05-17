@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.twiceagain.mywebdriver.limiters;
+package com.twiceagain.mywebdriver.generators;
 
 /**
  * Basic, multpurpose, limiter. Extend as needed.
  *
  * @author xavier
  */
-public class BasicLimiter implements Limiter {
+public class LimiterBasic implements Limiter {
 
     protected final Long maxTime;
     protected long start = System.currentTimeMillis();
@@ -24,7 +24,7 @@ public class BasicLimiter implements Limiter {
     /**
      * No limit set, continue forever ...
      */
-    public BasicLimiter() {
+    public LimiterBasic() {
         maxTime = null;
         maxDocument = maxSite = maxPage = null;
     }
@@ -34,7 +34,7 @@ public class BasicLimiter implements Limiter {
      *
      * @param maxTime - max elapsed time in millis
      */
-    public BasicLimiter(Long maxTime) {
+    public LimiterBasic(Long maxTime) {
         this.maxTime = maxTime;
         maxDocument = maxSite = maxPage = null;
     }
@@ -47,7 +47,7 @@ public class BasicLimiter implements Limiter {
      * @param maxPage max page count, null to ignore
      * @param maxSite max site count, null to ignore
      */
-    public BasicLimiter(Long maxTime, Integer maxDocument, Integer maxPage, Integer maxSite) {
+    public LimiterBasic(Long maxTime, Integer maxDocument, Integer maxPage, Integer maxSite) {
         this.maxTime = maxTime;
         this.maxDocument = maxDocument;
         this.maxSite = maxSite;

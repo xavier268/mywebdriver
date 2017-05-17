@@ -98,7 +98,7 @@ public class AmazonFR extends WebPageBasic {
                             .append("asin", asin)
                             .append("url", "https://www.amazon.fr/dp/" + asin);
                 }
-            } catch (Exception ex) {
+            } catch (UnsupportedEncodingException ex) {
                 LOG.info(ex.getLocalizedMessage());
             }
 

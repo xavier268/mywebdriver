@@ -7,8 +7,8 @@ package com.twiceagain.mywebdriver.startup;
 
 import com.twiceagain.mywebdriver.driver.web.Drivers;
 import com.twiceagain.mywebdriver.generators.implementations.AmazonFR;
-import com.twiceagain.mywebdriver.generators.implementations.DocumentToDatabase;
-import com.twiceagain.mywebdriver.limiters.BasicLimiter;
+import com.twiceagain.mywebdriver.generators.DocumentToDatabase;
+import com.twiceagain.mywebdriver.generators.LimiterBasic;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -25,7 +25,7 @@ public class DemoAmazonFRdb {
         // conf.noImage = true;
         WebDriver wd = Drivers.getDriver(conf);
         AmazonFR page = new AmazonFR(wd);
-        page.setLimiter(new BasicLimiter(null, 100, 4, null));
+        page.setLimiter(new LimiterBasic(null, 100, 4, null));
         page.init("billard américain");        
         page.processDocuments(new DocumentToDatabase("dummy","amazon"));
         

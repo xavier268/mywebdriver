@@ -6,8 +6,6 @@
 package com.twiceagain.mywebdriver.generators;
 
 import com.twiceagain.mywebdriver.driver.web.Drivers;
-import com.twiceagain.mywebdriver.limiters.BasicLimiter;
-import com.twiceagain.mywebdriver.limiters.Limiter;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
@@ -21,8 +19,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Base structure for a multipage document processing object. You typically
- create the WebPageBasic with an existing WebDriver, set the xpath parameters
- and the other parameters, and finish with preloadElements(url).
+ * create the WebPageBasic with an existing WebDriver, set the xpath parameters
+ * and the other parameters, and finish with init(url). Subclasses should
+ * redefine their own init(...) function.
  *
  *
  * @author xavier
@@ -57,9 +56,9 @@ public class WebPageBasic implements WebPage {
     protected String xpDocuments = ".";
 
     /**
-     * Limiter, defaults to BasicLimiter..
+     * Limiter, defaults to LimiterBasic..
      */
-    protected Limiter limiter = new BasicLimiter();
+    protected Limiter limiter = new LimiterBasic();
     /**
      * Document parser, or null to simply extract text content.
      */
@@ -124,7 +123,7 @@ public class WebPageBasic implements WebPage {
     public boolean goToNextPage() {
         if (limiter.shouldStop()) {
             return false;
-        }       
+        }
 
         // When pages never have next pages.
         if (xpNextPageClick == null) {
@@ -132,7 +131,6 @@ public class WebPageBasic implements WebPage {
             return false;
         }
 
-        
         // check for hasNextPage, if it is defined
         if (xpHasNextPage != null) {
             try {
@@ -148,7 +146,7 @@ public class WebPageBasic implements WebPage {
         WebElement stale = null;
         if (xpStalenessMarker != null) {
             try {
-                stale = wd.findElements(By.xpath(xpStalenessMarker)).get(0);                
+                stale = wd.findElements(By.xpath(xpStalenessMarker)).get(0);
             } catch (Exception ex) {
                 stale = null;
                 LOG.info(ex.getLocalizedMessage());
@@ -334,7 +332,7 @@ public class WebPageBasic implements WebPage {
     @Override
     public void init(String url) {
         wd.get(url);
-        preloadElements();        
+        preloadElements();
     }
 
 }

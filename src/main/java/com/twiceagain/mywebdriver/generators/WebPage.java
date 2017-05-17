@@ -5,7 +5,6 @@
  */
 package com.twiceagain.mywebdriver.generators;
 
-import com.twiceagain.mywebdriver.limiters.Limiter;
 import java.util.Iterator;
 import java.util.function.BiFunction;
 import org.bson.Document;
@@ -14,7 +13,7 @@ import org.openqa.selenium.WebElement;
 
 
 /**
- * A WebPage should provide a way to iterate over documents.
+ * A WebPage provide a way to iterate over documents.
  *
  * @author xavier
  */

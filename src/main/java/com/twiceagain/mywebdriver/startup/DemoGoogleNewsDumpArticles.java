@@ -8,7 +8,7 @@ package com.twiceagain.mywebdriver.startup;
 import com.twiceagain.mywebdriver.driver.web.Drivers;
 import com.twiceagain.mywebdriver.generators.WebPage;
 import com.twiceagain.mywebdriver.generators.WebPageBasic;
-import com.twiceagain.mywebdriver.generators.implementations.DocumentPrinter;
+import com.twiceagain.mywebdriver.generators.DocumentPrinter;
 import org.openqa.selenium.WebDriver;
 
 /**

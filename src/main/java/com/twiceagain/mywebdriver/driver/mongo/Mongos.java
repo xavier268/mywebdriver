@@ -7,11 +7,9 @@ package com.twiceagain.mywebdriver.driver.mongo;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.mongodb.client.ListDatabasesIterable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import org.bson.Document;
 
 /**
  * Factory class to provide access to a SYNC MongoClient.

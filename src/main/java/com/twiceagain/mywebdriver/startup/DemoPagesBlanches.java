@@ -6,9 +6,9 @@
 package com.twiceagain.mywebdriver.startup;
 
 import com.twiceagain.mywebdriver.driver.web.Drivers;
-import com.twiceagain.mywebdriver.generators.implementations.DocumentPrinter;
+import com.twiceagain.mywebdriver.generators.DocumentPrinter;
 import com.twiceagain.mywebdriver.generators.implementations.PagesBlanches;
-import com.twiceagain.mywebdriver.limiters.BasicLimiter;
+import com.twiceagain.mywebdriver.generators.LimiterBasic;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -25,7 +25,7 @@ public class DemoPagesBlanches {
         WebDriver wd = Drivers.getDriver(Drivers.Config.defaultLocalFirefox());
 
         PagesBlanches page = new PagesBlanches(wd);
-        page.setLimiter(new BasicLimiter(null, 200, 6, null));
+        page.setLimiter(new LimiterBasic(null, 200, 6, null));
         page.init("dupont", "sceaux");
 
         page.processDocuments(new DocumentPrinter());

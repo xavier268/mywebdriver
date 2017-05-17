@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.twiceagain.mywebdriver.generators.implementations;
+package com.twiceagain.mywebdriver.generators;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.twiceagain.mywebdriver.driver.mongo.Mongos;
-import com.twiceagain.mywebdriver.limiters.Limiter;
 import java.util.function.BiFunction;
 import org.bson.Document;
 
