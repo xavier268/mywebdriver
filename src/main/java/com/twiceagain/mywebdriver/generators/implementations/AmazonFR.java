@@ -7,6 +7,7 @@ package com.twiceagain.mywebdriver.generators.implementations;
 
 import com.twiceagain.mywebdriver.generators.WebPageBasic;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
@@ -41,7 +42,7 @@ public class AmazonFR extends WebPageBasic {
      */
     @Override
     public void init(String search) {
-        String url = "https://www.amazon.fr/s/?field-keywords=";
+        String url = "https://www.amazon.fr/s/?__mk_fr_FR=ÅMÅŽÕÑ&field-keywords=";
         try {
             url += URLEncoder.encode(search, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
@@ -75,14 +76,30 @@ public class AmazonFR extends WebPageBasic {
             }
 
             if (priceString != null) {
-                priceString  = priceString.replace(",",".").replace(" ", "");
+                priceString = priceString.replace(",", ".").replace(" ", "");
                 final Pattern pat = Pattern.compile("^EUR([.0123456789]+).*$");
                 Matcher matcher = pat.matcher(priceString);
                 double price = 0;
                 if (matcher.matches()) {
-                    price = Double.parseDouble(matcher.group(1));                    
-                }                 
+                    price = Double.parseDouble(matcher.group(1));
+                }
                 doc.append("price", price);
+            }
+
+            try {
+                String url = we.findElement(By.xpath(".//h2/ancestor::a")).getAttribute("href");
+                // Sometimes, url is encoded in another one ...
+                url = URLDecoder.decode(url, "UTF8");
+                final Pattern pat = Pattern.compile("^.*/dp/([A-Z0-9]+)/.*$");
+                Matcher match = pat.matcher(url);
+                if (match.matches()) {
+                    String asin = match.group(1);
+                    doc
+                            .append("asin", asin)
+                            .append("url", "https://www.amazon.fr/dp/" + asin);
+                }
+            } catch (Exception ex) {
+                LOG.info(ex.getLocalizedMessage());
             }
 
             return doc;
