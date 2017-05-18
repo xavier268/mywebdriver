@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import org.openqa.selenium.WebDriver;
 
 /**
- * Demo Google News connector.
+ * Demo Google News connector
  *
  * @author xavier
  */
