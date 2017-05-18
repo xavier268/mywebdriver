@@ -6,8 +6,17 @@
 package com.twiceagain.mywebdriver.generators.implementations;
 
 import com.twiceagain.mywebdriver.generators.WebPageBasic;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.Locale;
+import java.util.function.BiFunction;
+import org.bson.Document;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 /**
  * A WebPage connector to search google.fr for web, news, ...
@@ -29,7 +38,8 @@ public class GoogleFR extends WebPageBasic {
     protected LocalDate minDate = null;
     protected LocalDate maxDate = null;
 
-    private final static String BASEURL = "https://www.google.fr/search?";
+    private final static String BASEURL = "https://www.google.fr/search?ie=utf8&";
+    private final static DateFormat DATEFORMAT = DateFormat.getDateInstance(DateFormat.LONG, Locale.FRANCE);
 
     public GoogleFR(WebDriver wd) {
         super(wd);
@@ -60,14 +70,27 @@ public class GoogleFR extends WebPageBasic {
     @Override
     public void init(String searchstring) {
         String url = BASEURL;
+        if (documentParser == null) {
+            documentParser = new DocumentParser();
+        }
 
         // Selecting mode
         switch (mode) {
             case NEWS:
                 url += "tbm=nws&";
+                xpDocuments = ".//div[@class='g']";
+                xpHasNextPage = ".//a[@id='pnnext']";
+                xpNextPageClick = xpHasNextPage;
+                xpPageLoadedMarker = xpNextPageClick;
+                xpStalenessMarker = "(" + xpDocuments + ")[1]";
                 break;
             case BOOKS:
                 url += "tbm=bks&";
+                xpDocuments = ".//div[@class='g']";
+                xpHasNextPage = ".//a[@id='pnnext']";
+                xpNextPageClick = xpHasNextPage;
+                xpPageLoadedMarker = xpNextPageClick;
+                xpStalenessMarker = "(" + xpDocuments + ")[1]";
                 break;
             case SHOPPING:
                 url += "tbm=shop&";
@@ -77,8 +100,19 @@ public class GoogleFR extends WebPageBasic {
                 break;
             case VIDEOS:
                 url += "tbm=vid&";
+                xpDocuments = ".//div[@class='g']";
+                xpHasNextPage = ".//a[@id='pnnext']";
+                xpNextPageClick = xpHasNextPage;
+                xpPageLoadedMarker = xpNextPageClick;
+                xpStalenessMarker = "(" + xpDocuments + ")[1]";
                 break;
             case ALL:
+                xpDocuments = ".//div[@class='g']";
+                xpHasNextPage = ".//a[@id='pnnext']";
+                xpNextPageClick = xpHasNextPage;
+                xpPageLoadedMarker = xpNextPageClick;
+                xpStalenessMarker = "(" + xpDocuments + ")[1]";
+                break;
             default:
         }
 
@@ -101,6 +135,79 @@ public class GoogleFR extends WebPageBasic {
             }
             url += "&";
         }
+
+        // Encode search string
+        if (searchstring != null) {
+            try {
+                url += "q=" + URLEncoder.encode(searchstring, "UTF8");
+
+            } catch (UnsupportedEncodingException ex) {
+                LOG.severe(ex.getLocalizedMessage());
+                System.exit(2);
+            }
+        }
+        super.init(url);
+    }
+
+    /**
+     * Parse a document, according to the selected search mode.
+     */
+    protected class DocumentParser implements BiFunction<WebDriver, WebElement, Document> {
+
+        @Override
+        public Document apply(WebDriver wd, WebElement we) {
+            if (we == null) {
+                return null;
+            }
+            Document doc = new Document("doctype", GoogleFR.class.getCanonicalName())
+                    .append("mode", mode.toString());
+            try {
+                doc.append("title", we.findElement(By.tagName("h3")).getText());
+                doc.append("url", we.findElement(By.xpath(".//h3//a")).getAttribute("href"));
+            } catch (Exception ex) {
+                LOG.info(ex.getLocalizedMessage());
+                // ignore
+            }
+            try {
+                doc.append("citation", we.findElement(By.tagName("cite")).getText());
+            } catch (Exception ex) {
+                LOG.finer(ex.getLocalizedMessage());
+                // ignore
+            }
+            try {
+                doc.append("source", we.findElement(By.xpath(".//div[@class='slp']/span[1]")).getText());
+            } catch (Exception ex) {
+                LOG.finer(ex.getLocalizedMessage());
+                // ignore
+            }
+            try {
+                doc.append("subtitle", we.findElement(By.xpath(".//*[@class='st']")).getText());
+            } catch (Exception ex) {
+                LOG.finer(ex.getLocalizedMessage());
+                // ignore
+            }
+            try {
+                // Use date only for news
+                if (mode == Mode.NEWS) {
+                    String ds = we.findElement(By.xpath(".//*[contains(@class,'f nsa')]"))
+                            .getText();
+                    doc.append("datestring", ds);
+                    if (ds.startsWith("Il y a ")) {
+                        doc.append("date", new Date());
+                    } else {
+                        doc.append("date",DATEFORMAT.parse(ds));
+                    }
+
+                }
+            } catch (Exception ex) {
+                LOG.finer(ex.getLocalizedMessage());
+                // ignore
+            }
+
+            doc.append("text", we.getText());
+            return doc;
+        }
+
     }
 
 }
