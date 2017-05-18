@@ -37,8 +37,12 @@ public class GoogleFR extends WebPageBasic {
     protected Mode mode = Mode.ALL;
     protected LocalDate minDate = null;
     protected LocalDate maxDate = null;
-
-    private final static String BASEURL = "https://www.google.fr/search?ie=utf8&";
+    // filter prevents aggregating similar results
+    // otherwise, results are bouded around a few 100s.
+    // Applying request for 100 results only works for the first page.
+    // Following pages will only capture 10 results.
+    private final static String BASEURL = "https://www.google.fr/search?ie=utf8&num=100&filter=0&";
+    // private final static String BASEURL = "https://www.google.fr/search?ie=utf8&";
     private final static DateFormat DATEFORMAT = DateFormat.getDateInstance(DateFormat.LONG, Locale.FRANCE);
 
     public GoogleFR(WebDriver wd) {
@@ -81,16 +85,16 @@ public class GoogleFR extends WebPageBasic {
                 xpDocuments = ".//div[@class='g']";
                 xpHasNextPage = ".//a[@id='pnnext']";
                 xpNextPageClick = xpHasNextPage;
-                xpPageLoadedMarker = xpNextPageClick;
-                xpStalenessMarker = "(" + xpDocuments + ")[1]";
+                xpPageLoadedMarker = xpHasNextPage;
+                xpStalenessMarker = xpHasNextPage;
                 break;
             case BOOKS:
                 url += "tbm=bks&";
                 xpDocuments = ".//div[@class='g']";
                 xpHasNextPage = ".//a[@id='pnnext']";
                 xpNextPageClick = xpHasNextPage;
-                xpPageLoadedMarker = xpNextPageClick;
-                xpStalenessMarker = "(" + xpDocuments + ")[1]";
+                xpPageLoadedMarker = xpHasNextPage;
+                xpStalenessMarker = xpHasNextPage;
                 break;
             case SHOPPING:
                 url += "tbm=shop&";
@@ -103,15 +107,15 @@ public class GoogleFR extends WebPageBasic {
                 xpDocuments = ".//div[@class='g']";
                 xpHasNextPage = ".//a[@id='pnnext']";
                 xpNextPageClick = xpHasNextPage;
-                xpPageLoadedMarker = xpNextPageClick;
-                xpStalenessMarker = "(" + xpDocuments + ")[1]";
+                xpPageLoadedMarker = xpHasNextPage;
+                xpStalenessMarker = xpHasNextPage;
                 break;
             case ALL:
                 xpDocuments = ".//div[@class='g']";
                 xpHasNextPage = ".//a[@id='pnnext']";
                 xpNextPageClick = xpHasNextPage;
-                xpPageLoadedMarker = xpNextPageClick;
-                xpStalenessMarker = "(" + xpDocuments + ")[1]";
+                xpPageLoadedMarker = xpHasNextPage;
+                xpStalenessMarker = xpHasNextPage;
                 break;
             default:
         }
@@ -187,17 +191,24 @@ public class GoogleFR extends WebPageBasic {
                 // ignore
             }
             try {
-                // Use date only for news
+                String ds = null;
+
                 if (mode == Mode.NEWS) {
-                    String ds = we.findElement(By.xpath(".//*[contains(@class,'f nsa')]"))
+                    ds = we.findElement(By.xpath(".//*[contains(@class,'f nsa')]"))
                             .getText();
-                    doc.append("datestring", ds);
-                    if (ds.startsWith("Il y a ")) {
+                }
+
+                if (mode == Mode.VIDEOS) {
+                    ds = we.findElement(By.xpath(".//div[contains(@class,'slp f')]"))
+                            .getText();
+                }
+                // If relative date or time, use current date.
+                if (ds != null) {
+                    if (ds.startsWith("l y a ", 1)) {
                         doc.append("date", new Date());
                     } else {
-                        doc.append("date",DATEFORMAT.parse(ds));
+                        doc.append("date", DATEFORMAT.parse(ds));
                     }
-
                 }
             } catch (Exception ex) {
                 LOG.finer(ex.getLocalizedMessage());
