@@ -25,6 +25,8 @@ import org.openqa.selenium.WebElement;
  */
 public class GoogleFR extends WebPageBasic {
 
+    
+
     /**
      * Available search modes.
      */
@@ -37,11 +39,12 @@ public class GoogleFR extends WebPageBasic {
     protected Mode mode = Mode.ALL;
     protected LocalDate minDate = null;
     protected LocalDate maxDate = null;
+    private boolean noFilter=false;
     // filter prevents aggregating similar results
     // otherwise, results are bouded around a few 100s.
     // Applying request for 100 results only works for the first page.
     // Following pages will only capture 10 results.
-    private final static String BASEURL = "https://www.google.fr/search?ie=utf8&num=100&filter=0&";
+    private final static String BASEURL = "https://www.google.fr/search?ie=utf8&num=100&";
     // private final static String BASEURL = "https://www.google.fr/search?ie=utf8&";
     private final static DateFormat DATEFORMAT = DateFormat.getDateInstance(DateFormat.LONG, Locale.FRANCE);
 
@@ -51,6 +54,10 @@ public class GoogleFR extends WebPageBasic {
 
     public void setSearchMode(Mode mode) {
         this.mode = mode;
+    }
+    
+    public void setNoFilter() {
+        this.noFilter=true;
     }
 
     /**
@@ -76,6 +83,10 @@ public class GoogleFR extends WebPageBasic {
         String url = BASEURL;
         if (documentParser == null) {
             documentParser = new DocumentParser();
+        }
+        
+        if(noFilter) {
+            url+="filter=0&";
         }
 
         // Selecting mode
