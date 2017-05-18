@@ -15,7 +15,7 @@ import org.openqa.selenium.WebElement;
  *
  * @author xavier
  */
-public class DemoGoogleNewsVisualizeElements {
+public class DemoBasicWebPageVisualizeElements {
 
     /**
      * @param args the command line arguments

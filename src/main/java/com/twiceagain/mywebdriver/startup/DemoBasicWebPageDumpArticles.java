@@ -16,7 +16,7 @@ import org.openqa.selenium.WebDriver;
  *
  * @author xavier
  */
-public class DemoGoogleNewsDumpArticles {
+public class DemoBasicWebPageDumpArticles {
 
     /**
      * @param args the command line arguments

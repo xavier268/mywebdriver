@@ -9,17 +9,19 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Main entry point for the CLI interface.
+ * Main entry point for the CLI interface. This class is merked as the default
+ * entry point in the Manifest (single-jar packaging), donot change its
+ * name or package..
  *
  * @author xavier
  */
 public class Bootstrap {
 
     static final List<String> MENU = Arrays.asList(
-            "help",            
+            "help",
             "test-grid",
             "test-no-grid"
-            );
+    );
 
     /**
      * @param args the command line arguments
@@ -31,10 +33,10 @@ public class Bootstrap {
                 case "help":
                     System.out.printf("Valid commands are : %s\n", MENU);
                     break;
-                case "test-grid":                    
+                case "test-grid":
                     DemoGrid.main(Arrays.copyOfRange(args, 1, args.length));
                     break;
-                case "test-no-grid":                    
+                case "test-no-grid":
                     DemoNoGrid.main(Arrays.copyOfRange(args, 1, args.length));
                     break;
                 default:
