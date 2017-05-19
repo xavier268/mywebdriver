@@ -8,7 +8,6 @@ package com.twiceagain.mywebdriver.generators;
 import com.twiceagain.mywebdriver.driver.web.Drivers;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.function.BiFunction;
 import java.util.logging.Logger;
 import org.bson.Document;
 import org.openqa.selenium.By;
@@ -26,11 +25,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  *
  * @author xavier
  */
-public class WebPageBasic implements WebPage {
+public class WebPageBasic extends WebPageAbstract implements WebPage {
 
     protected static final Logger LOG = Logger.getLogger(WebPageBasic.class.getName());
 
-    protected WebDriver wd;
     /**
      * Presence of this element means page is loaded. Null means no check.
      */
@@ -54,19 +52,17 @@ public class WebPageBasic implements WebPage {
      * All WebElements returned by this xpath will be used to parse documents.
      */
     protected String xpDocuments = ".";
-
     /**
      * Limiter, defaults to LimiterBasic..
      */
-    protected Limiter limiter = new LimiterBasic();
     /**
      * Document parser, or null to simply extract text content.
      */
-    protected BiFunction<WebDriver, WebElement, Document> documentParser;
     /**
      * Default timeout for explicit waits.
      */
-    protected int maxWaitSeconds = 5; // maximum waiting time in seconds
+    // maximum waiting time in seconds
+
 
     //  === internal cache for performance reasons ====
     /**
@@ -75,8 +71,7 @@ public class WebPageBasic implements WebPage {
     protected List<WebElement> loadedElements = null;
 
     public WebPageBasic(WebDriver wd) {
-        this.wd = wd;
-        limiter.incSite();
+        super(wd);
     }
 
     /**
@@ -219,19 +214,6 @@ public class WebPageBasic implements WebPage {
 
     }
 
-    @Override
-    public boolean processDocuments(BiFunction<Limiter, Document, Boolean> documentProcessor) {
-
-        if (documentProcessor == null) {
-            return true;
-        }
-        while (hasNext() && limiter.shouldContinue()) {
-            if (!documentProcessor.apply(limiter, next())) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * Add an overlay for visual debugging. Ignore xpPath issues.
@@ -281,53 +263,27 @@ public class WebPageBasic implements WebPage {
         return this;
     }
 
-    @Override
-    public void close() {
-        if (wd != null) {
-            wd.close();
-            wd = null;
-        }
-    }
 
-    @Override
     public void setXpPageLoadedMarker(String xpPageLoadedMarker) {
         this.xpPageLoadedMarker = xpPageLoadedMarker;
     }
 
-    @Override
     public void setXpHasNextPage(String xpHasNextPage) {
         this.xpHasNextPage = xpHasNextPage;
     }
 
-    @Override
     public void setXpNextPageClick(String xpNextPageClick) {
         this.xpNextPageClick = xpNextPageClick;
     }
 
-    @Override
     public void setXpStalenessMarker(String xpStalenessMarker) {
         this.xpStalenessMarker = xpStalenessMarker;
     }
 
-    @Override
     public void setXpDocuments(String xpDocuments) {
         this.xpDocuments = xpDocuments;
     }
 
-    @Override
-    public void setLimiter(Limiter limiter) {
-        this.limiter = limiter;
-    }
-
-    @Override
-    public void setDocumentParser(BiFunction<WebDriver, WebElement, Document> documentParser) {
-        this.documentParser = documentParser;
-    }
-
-    @Override
-    public void setMaxWaitSeconds(int maxWaitSeconds) {
-        this.maxWaitSeconds = maxWaitSeconds;
-    }
 
     @Override
     public void init(String url) {

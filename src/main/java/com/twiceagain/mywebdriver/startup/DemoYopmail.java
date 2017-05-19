@@ -6,41 +6,31 @@
 package com.twiceagain.mywebdriver.startup;
 
 import com.twiceagain.mywebdriver.driver.web.Drivers;
-import com.twiceagain.mywebdriver.generators.WebPage;
-import com.twiceagain.mywebdriver.generators.WebPageBasic;
 import com.twiceagain.mywebdriver.generators.DocumentPrinter;
+import com.twiceagain.mywebdriver.generators.implementations.Yopmail;
 import org.openqa.selenium.WebDriver;
 
 /**
- * Demo using google search to generate basic documents.
  *
  * @author xavier
  */
-public class DemoBasicWebPageDumpArticles {
+public class DemoYopmail {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        
         WebDriver wd = Drivers.getDriver(Drivers.Config.defaultLocalFirefox());
-
-        WebPageBasic page = new WebPageBasic(wd);
-        page.setXpDocuments(".//div[@class='esc-body']");
-        page.init("http://news.google.com");
-
+        WebDriver wd2 = Drivers.getDriver(Drivers.Config.defaultLocalFirefox());
+        
+        Yopmail page = new Yopmail(wd, wd2) ;        
+        
+        page.init("maxim");
         page.processDocuments(new DocumentPrinter());
-
-        // Maximize page Height, then take screenshot
-        // Will crash if in grid mode ... ??!!
-        Drivers.adjustPageHeight(wd);
-
-        page.addDebugOverlay();
-
-        Drivers.screenshot2File(wd, "googleNewsTest.png");
-
-        wd.close();
-
+        
+         page.close();
+        
     }
-
+    
 }

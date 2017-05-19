@@ -62,15 +62,7 @@ public interface WebPage extends Iterator<Document> {
 
     void setMaxWaitSeconds(int maxWaitSeconds);
 
-    void setXpDocuments(String xpDocuments);
-
-    void setXpHasNextPage(String xpHasNextPage);
-
-    void setXpNextPageClick(String xpNextPageClick);
-
-    void setXpPageLoadedMarker(String xpPageLoadedMarker);
-
-    void setXpStalenessMarker(String xpStalenessMarker);
+    
     
     
 
