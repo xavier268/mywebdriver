@@ -29,7 +29,7 @@
     </properties>
     <build>
         <plugins>
-            
+            <!-- make a full uberjar -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.0.0</version>
