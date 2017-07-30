@@ -9,14 +9,18 @@ import com.google.common.io.Files;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 import javax.imageio.ImageIO;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
@@ -51,8 +55,10 @@ public class Drivers {
         try {
             // Local firefox instance
             if (!config.useGrid) {
+                // LoadGeckodriver if needed
+                Config.installGeckoDriver();
                 // Set geckodriver full absolute path
-                System.setProperty("webdriver.gecko.driver", Config.geckoDriverPath);
+                System.setProperty("webdriver.gecko.driver", Config.GECKODRIVER_ABSOLUTE_PATH);
                 wd = new FirefoxDriver(config.getDesiredCapabilities());
                 // Grid instance
             } else {
@@ -216,7 +222,8 @@ public class Drivers {
          * Load QuickJava plugin. Version 2.1.0 as of may 8th, 2017
          *
          */
-        public static String quickJavaUrl = "https://addons.mozilla.org/firefox/downloads/latest/quickjava/addon-1237-latest.xpi";
+        public static final String QUICKJAVA_URL
+                = "https://addons.mozilla.org/firefox/downloads/latest/quickjava/addon-1237-latest.xpi";
         /**
          * Path to loaded quickJava file. Do not set manually !
          */
@@ -225,7 +232,8 @@ public class Drivers {
          * Path to a geckodriver, compatible with local firefox version AND
          * selenium version.
          */
-        public static String geckoDriverPath = "/home/xavier/bin/geckodriver";
+        public static final String GECKODRIVER_ABSOLUTE_PATH = "/tmp/geckodriver";
+
         /**
          * Do not display images ?
          */
@@ -285,7 +293,7 @@ public class Drivers {
                     return Config.quickJavaPath;
                 }
 
-                URL url = new URL(Config.quickJavaUrl);
+                URL url = new URL(Config.QUICKJAVA_URL);
                 ReadableByteChannel rbc = Channels.newChannel(url.openStream());
                 try (FileOutputStream fos = new FileOutputStream(fileName)) {
                     fos.getChannel().transferFrom(rbc, 0, 1_000_000L);
@@ -297,6 +305,41 @@ public class Drivers {
                 LOG.log(Level.SEVERE, null, ex);
                 return null;
             }
+        }
+
+        /**
+         * Install the geckoDriver executable for LOCAL firefox instances. The
+         * executable file is provided as a resource.
+         *
+         */
+        protected static void installGeckoDriver() throws FileNotFoundException {
+
+            // If already loaded, do nothing.
+            if (new File(Config.GECKODRIVER_ABSOLUTE_PATH).exists()) {
+                LOG.log(Level.INFO, "Already loaded geckodriver file : {0}", GECKODRIVER_ABSOLUTE_PATH);
+                return;
+            }
+            LOG.info("No Geckodriver available yet - installing from resources ...");
+
+            byte[] buffer = new byte[128_000]; // 128K buffer
+            int len;
+
+            try (
+                    InputStream in = Drivers.class.getClassLoader().getResourceAsStream("geckodriver-0.18.0");
+                    OutputStream out = new FileOutputStream(GECKODRIVER_ABSOLUTE_PATH)) {
+
+                len = in.read(buffer);
+                while (len > 0 ) {
+                    out.write(buffer, 0, len);
+                    len = in.read(buffer);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Drivers.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            // Make file executable.
+            new File(GECKODRIVER_ABSOLUTE_PATH).setExecutable(true, true);
+
         }
 
         /**
@@ -400,12 +443,14 @@ public class Drivers {
             highlightElement(wd, we, String.format("#%d %s", i, message, frontrgba, backrgba));
         }
     }
-/**
- * Highlight selected elements.
- * @param wd
- * @param lwe
- * @param message 
- */
+
+    /**
+     * Highlight selected elements.
+     *
+     * @param wd
+     * @param lwe
+     * @param message
+     */
     public static void highlightElements(WebDriver wd,
             List<WebElement> lwe,
             String message) {
@@ -478,11 +523,13 @@ public class Drivers {
 
         ((JavascriptExecutor) wd).executeScript(script);
     }
-/**
- * Scroll to make element visible.
- * @param wd
- * @param we 
- */
+
+    /**
+     * Scroll to make element visible.
+     *
+     * @param wd
+     * @param we
+     */
     public static void scrollElementIntoView(WebDriver wd, WebElement we) {
         if (wd == null || we == null) {
             return;
@@ -492,10 +539,11 @@ public class Drivers {
     }
 
     /**
-     * Get an estimate of the document page height (beyond the viewport).   
+     * Get an estimate of the document page height (beyond the viewport).
      * Caution : this seems to crash the browser when run in Grid mode ...
+     *
      * @param wd
-     * @return 
+     * @return
      */
     public static int getPageHeigth(WebDriver wd) {
         String script = "var body = document.bodyvar;"
@@ -503,20 +551,21 @@ public class Drivers {
                 + "return Math.max( document.body.scrollHeight, document.body.offsetHeight,"
                 + "document.documentElement.clientHeight, document.documentElement.scrollHeight,"
                 + "document.documentElement.offsetHeight );";
-    
-             Long res = (Long) ((JavascriptExecutor) wd).executeScript(script);  
-             return res.intValue();
-        }
+
+        Long res = (Long) ((JavascriptExecutor) wd).executeScript(script);
+        return res.intValue();
+    }
 
     /**
-     * Adjust page height to ensure there are no vertical scrollbars.
-     * Caution : this seems to crash the browser when run in Grid mode ...
-     * @param wd 
+     * Adjust page height to ensure there are no vertical scrollbars. Caution :
+     * this seems to crash the browser when run in Grid mode ...
+     *
+     * @param wd
      */
-    public static void adjustPageHeight(WebDriver wd) {        
+    public static void adjustPageHeight(WebDriver wd) {
         int ww = wd.manage().window().getSize().width;
         int hh = wd.manage().window().getSize().height;
-        hh = Math.max(hh, Drivers.getPageHeigth(wd)+200);
-        wd.manage().window().setSize(new Dimension(ww,hh));        
+        hh = Math.max(hh, Drivers.getPageHeigth(wd) + 200);
+        wd.manage().window().setSize(new Dimension(ww, hh));
     }
 }

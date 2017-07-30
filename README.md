@@ -19,6 +19,4 @@ It seems to work fine on a local browser ...
 
 * Launch grid container in docker (use provided script)
 * launch mongo conatianer (use provided script)
-* ensure latest geckodriver can be found in the Drivers.Confic.getcckoDriver 
-location. It should be executable, and the path should be in the $PATH variable.
-
+* ensure driver version in resources is compatible with local firefox version
