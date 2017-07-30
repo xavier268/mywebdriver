@@ -9,7 +9,6 @@ import com.google.common.io.Files;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +19,6 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.GZIPInputStream;
 import javax.imageio.ImageIO;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
@@ -312,7 +310,7 @@ public class Drivers {
          * executable file is provided as a resource.
          *
          */
-        protected static void installGeckoDriver() throws FileNotFoundException {
+        protected static void installGeckoDriver()  {
 
             // If already loaded, do nothing.
             if (new File(Config.GECKODRIVER_ABSOLUTE_PATH).exists()) {
