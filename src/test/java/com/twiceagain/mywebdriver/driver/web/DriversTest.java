@@ -5,9 +5,11 @@
  */
 package com.twiceagain.mywebdriver.driver.web;
 
-import com.twiceagain.mywebdriver.driver.web.Drivers;
 import com.twiceagain.mywebdriver.driver.web.Drivers.Config;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -28,7 +30,17 @@ public class DriversTest {
     }
 
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws IOException {
+        Path path;
+        // Cleanup previous tests generated files.
+        Files.deleteIfExists(Paths.get("gridNoImage_FullPageGoogle.png"));
+        Files.deleteIfExists(Paths.get("gridNoImage_LogoGoogle.png"));
+        Files.deleteIfExists(Paths.get("grid_FullPageGoogle.png"));
+        Files.deleteIfExists(Paths.get("grid_LogoGoogle.png"));
+        Files.deleteIfExists(Paths.get("local_FullPageGoogle.png"));
+        Files.deleteIfExists(Paths.get("local_LogoGoogle.png"));
+        
+        
     }
 
     @AfterClass

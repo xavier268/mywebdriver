@@ -14,3 +14,8 @@ Use java8 facilities (such as CompletableFuture.async if needed for async access
 
 * Trying to resize window to maximum size will crash the browser when running on grid. 
 It seems to work fine on a local browser ...
+
+# Configuration checklist before testing
+
+Launch grid container in docker
+

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+VERSION="3.4.0"
+echo "Demo setting up a network of nodes and a hub for headless selenium testing - version $VERSION"
+
+# This is NOT using the deprecated '--link' feature as per the demo from selenium any more.
+# It is replaced by custom networking and direct env variable setting.
+
+# Launch network - may fail if already exists
+sudo -- docker network create SELBRIDGE
+
+
+# Launch hub - may fail if alredy exists
+sudo -- docker run  -d --name selHub --network=SELBRIDGE -p 4444:4444  -e "GRID_MAX_SESSION=10" selenium/hub:$VERSION 
+
+#Launch 2 nodes
+sudo -- docker run  -d -e "HUB_PORT_4444_TCP_ADDR=selHub" -e "HUB_PORT_4444_TCP_PORT=4444" \
+    -e "NODE_MAX_INSTANCES=7" -e "NODE_MAX_SESSION=7" --network=SELBRIDGE selenium/node-firefox:$VERSION
+
+sudo -- docker run  -d -e "HUB_PORT_4444_TCP_ADDR=selHub" -e "HUB_PORT_4444_TCP_PORT=4444" \
+    -e "NODE_MAX_INSTANCES=7" -e "NODE_MAX_SESSION=7" --network=SELBRIDGE selenium/node-chrome:$VERSION
+
+
+#Display running containers details
+sudo -- docker ps
+echo "Connect on http://localhost:4444/grid/console to see the console"
+
