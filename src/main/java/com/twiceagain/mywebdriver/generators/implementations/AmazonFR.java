@@ -55,6 +55,7 @@ public class AmazonFR extends WebPageBasic {
     /**
      * TODO
      */
+    
     protected class DocumentParser implements BiFunction<WebDriver, WebElement, Document> {
 
         @Override
@@ -98,7 +99,7 @@ public class AmazonFR extends WebPageBasic {
                             .append("asin", asin)
                             .append("url", "https://www.amazon.fr/dp/" + asin);
                 }
-            } catch (UnsupportedEncodingException ex) {
+            } catch (Exception ex) {
                 LOG.info(ex.getLocalizedMessage());
             }
 
