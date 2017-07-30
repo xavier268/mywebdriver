@@ -222,7 +222,7 @@ public class Drivers {
          */
         protected static String quickJavaPath = null;
         /**
-         * Path to a geckodriver, compatible with lovcal firefox version AND
+         * Path to a geckodriver, compatible with local firefox version AND
          * selenium version.
          */
         public static String geckoDriverPath = "/home/xavier/bin/geckodriver";
