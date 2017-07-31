@@ -312,15 +312,19 @@ public class Drivers {
          *
          */
         protected static void installGeckoDriver() {
+            
+            final File  gf = new File("geckodriver");
 
-            // If already loaded, do nothing.
-            if (geckodriver_absolute_path != null && new File(Config.geckodriver_absolute_path).exists()) {
+            // If already loaded, do nothing, excpet updating the path.
+            if ( gf.exists()) {
                 LOG.log(Level.INFO, "Already loaded geckodriver file : {0}", geckodriver_absolute_path);
+                if(geckodriver_absolute_path == null ) {                    
+                    geckodriver_absolute_path = gf.getAbsolutePath();
+                    LOG.log(Level.INFO, "Updated geckodriver installation path : {0}", geckodriver_absolute_path);
+                }
                 return;
-            } else {
-                // If filename was set, but does not exists ...
-                geckodriver_absolute_path = null;
-            }
+            } 
+            
             LOG.info("No Geckodriver available yet - installing from resources ...");
 
             byte[] buffer = new byte[128_000]; // 128K buffer
@@ -340,8 +344,8 @@ public class Drivers {
             }
 
             // Make file executable.
-            new File("geckodriver").setExecutable(true, true);
-            geckodriver_absolute_path = Paths.get("geckodriver").toAbsolutePath().toString();
+            gf.setExecutable(true, true);
+            geckodriver_absolute_path = gf.getAbsolutePath();
             LOG.log(Level.INFO, "Geckodriver installed in {0}", geckodriver_absolute_path);
 
         }
