@@ -29,28 +29,36 @@
     </properties>
     <build>
         <plugins>
-            <!-- make a full uberjar -->
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.0.0</version>
+                <!-- create manifest mainclass in main jar -->
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
                     <archive>
                         <manifest>
                             <mainClass>com.twiceagain.mywebdriver.startup.Bootstrap</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
+            </plugin>
+            <!-- make a shaded uberjar -->
+            <plugin>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <shadedClassifierName>shaded</shadedClassifierName>
+                    <!-- minimizing create pb with logging ? -->
+                    <minimizeJar>false</minimizeJar>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>                                  
+                </configuration>
                 <executions>
-                    <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                    <execution>                       
                         <phase>package</phase> <!-- bind to the packaging phase -->
                         <goals>
-                            <goal>single</goal>
+                            <goal>shade</goal>
                         </goals>
-                    </execution>
+                    </execution>                    
                 </executions>
             </plugin>
         </plugins>
