@@ -332,7 +332,7 @@ public class Drivers {
 
             try (
                     InputStream in = Drivers.class.getClassLoader().getResourceAsStream("geckodriver-0.18.0");
-                    OutputStream out = new FileOutputStream("geckodriver")) {
+                    OutputStream out = new FileOutputStream(gf)) {
 
                 len = in.read(buffer);
                 while (len > 0) {
