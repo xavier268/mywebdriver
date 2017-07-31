@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,7 +57,7 @@ public class Drivers {
                 // LoadGeckodriver if needed
                 Config.installGeckoDriver();
                 // Set geckodriver full absolute path
-                System.setProperty("webdriver.gecko.driver", Config.GECKODRIVER_ABSOLUTE_PATH);
+                System.setProperty("webdriver.gecko.driver", Config.geckodriver_absolute_path);
                 wd = new FirefoxDriver(config.getDesiredCapabilities());
                 // Grid instance
             } else {
@@ -230,7 +231,7 @@ public class Drivers {
          * Path to a geckodriver, compatible with local firefox version AND
          * selenium version.
          */
-        public static final String GECKODRIVER_ABSOLUTE_PATH = "/tmp/geckodriver";
+        public static String geckodriver_absolute_path = null;
 
         /**
          * Do not display images ?
@@ -307,15 +308,18 @@ public class Drivers {
 
         /**
          * Install the geckoDriver executable for LOCAL firefox instances. The
-         * executable file is provided as a resource.
+         * executable file is provided as a resource. 
          *
          */
-        protected static void installGeckoDriver()  {
+        protected static void installGeckoDriver() {
 
             // If already loaded, do nothing.
-            if (new File(Config.GECKODRIVER_ABSOLUTE_PATH).exists()) {
-                LOG.log(Level.INFO, "Already loaded geckodriver file : {0}", GECKODRIVER_ABSOLUTE_PATH);
+            if (geckodriver_absolute_path != null && new File(Config.geckodriver_absolute_path).exists()) {
+                LOG.log(Level.INFO, "Already loaded geckodriver file : {0}", geckodriver_absolute_path);
                 return;
+            } else {
+                // If filename was set, but does not exists ...
+                geckodriver_absolute_path = null;
             }
             LOG.info("No Geckodriver available yet - installing from resources ...");
 
@@ -324,10 +328,10 @@ public class Drivers {
 
             try (
                     InputStream in = Drivers.class.getClassLoader().getResourceAsStream("geckodriver-0.18.0");
-                    OutputStream out = new FileOutputStream(GECKODRIVER_ABSOLUTE_PATH)) {
+                    OutputStream out = new FileOutputStream("geckodriver")) {
 
                 len = in.read(buffer);
-                while (len > 0 ) {
+                while (len > 0) {
                     out.write(buffer, 0, len);
                     len = in.read(buffer);
                 }
@@ -336,7 +340,9 @@ public class Drivers {
             }
 
             // Make file executable.
-            new File(GECKODRIVER_ABSOLUTE_PATH).setExecutable(true, true);
+            new File("geckodriver").setExecutable(true, true);
+            geckodriver_absolute_path = Paths.get("geckodriver").toAbsolutePath().toString();
+            LOG.log(Level.INFO, "Geckodriver installed in {0}", geckodriver_absolute_path);
 
         }
 

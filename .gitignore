@@ -6,3 +6,6 @@
 
 // test files
 *.png
+
+// Cached geckodriver for local browsing.
+/geckodriver
