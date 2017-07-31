@@ -19,10 +19,10 @@ public class DemoGrid {
     public static void main(String[] args) {
         WebDriver wd = Drivers.getDriver(Drivers.Config.defaultGridFirefox());
         wd.get("https://www.google.com");
-        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, "local_FullPageGoogle.png"));
+        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, "grid_FullPageGoogle.png"));
 
         WebElement we = wd.findElement(By.id("hplogo"));
-        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, we, "local_LogoGoogle.png"));
+        System.out.printf("\nSaved file to : %s\n", Drivers.screenshot2File(wd, we, "grid_LogoGoogle.png"));
 
         wd.quit();
     }
