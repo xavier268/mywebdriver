@@ -48,9 +48,9 @@ Then, the scrapping is done by  in 6 steps :
 * Ensure geckodriver version in resources (currently 0.18.0) is compatible with your local firefox version
 
 Then, build with maven.
-* The first run will trigger installation of key components in your local directory (firefox extensions, geckodriver).
-* You may have to re-run the tests for them to pass.
-* Two artifacts will be generated, a "nomral" executable jar, and a "shaded uberjar" executable. Multiple instances may be run in parallele in an headless context such as AWS/EC2 for maximum throughput.
+* The first build  will trigger installation of key binary extension components in your local directory (firefox xpi extensions and geckodriver).
+* You may have to re-run the tests for them to pass, the first time the extensions are loaded and cached.
+* Two artifacts will be generated, a "normal" executable jar without the dependencies, and a "shaded uberjar" executable. with all dependencies included. Multiple instances may be run in parallele in an headless context such as AWS/EC2 or AWS/Lamda for maximum throughput.
 
 Testing the generated artifact can be done on the command line.
 * launching the artifact with no parameter will print the list of available parameters. Currently testing the grid and the non-grid(local) implementations are available, that will take a screenshot of the google home page, and oextract the google logo from it.
