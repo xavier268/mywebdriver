@@ -11,8 +11,26 @@ See the tests for demos on how to use
 
 # General architecture principles
 
+As much default behaviour and settings as possible are alreday implemented by default. You just need to customize the specificities for your site. If you do not specify an option, sensible defalt behaviour should hapen.
 
+Most scrappers (called 'generators', see AmazonFR example) will extend the WebpageBasic generator, by :
 
+* defining the specific document parser (that translates a WebElement into a MongoDocument object)
+* overriding the various xPath strings that caractérize the target scrapping (see javadoc for WebpageBasic)
+
+The Drivers class provides static metdos to obtain a selenium webdriver instance. Managing the webdriver is handled outside the scope of the scrapper (generator).
+
+Then, the scrapping is done by  in 6 steps :
+
+1. get a Webdriver by calling Drivers.getDriver with the relevant configuration (or reuse existing instance)
+2. construct an instance a WebpageBasic or of a subclass you designed
+3. set the desired specificities of your site :
+* xpath string, if you did not subclass. These strings are used to specify what to look for as a document, what to expect (detect page load), is there a next page and how to get it, how to ensure previous page has disappeared before strating to parse again, etc ... (see javadoc and demos) 
+* a custom documentParser that transforms the provided WebElement into a parsed MongoDocument oject.
+* optionnally, a Limiter object, that will set limits in terms of elaŝed time, nbr of pages, nbr of documents, etc. (see LimiterBasic object)
+4. call the init() method to initiate the page
+5. call the processDocuments method, to trigger the processing, specifying what you want to do with each parsed document with a document processor (or a lambda function). Default DocumentProcessor implementations are available to just print, or save in a mongo collection.
+6. close the Webpage implementation (This will close the WebDriver), or close the Webdriver directly.
 
 
 # Known bugs and limitations
@@ -34,12 +52,9 @@ Then, build with maven.
 * You may have to re-run the tests for them to pass.
 * Two artifacts will be generated, a "nomral" executable jar, and a "shaded uberjar" executable. Multiple instances may be run in parallele in an headless context such as AWS/EC2 for maximum throughput.
 
+Testing the generated artifact can be done on the command line.
+* launching the artifact with no parameter will print the list of available parameters. Currently testing the grid and the non-grid(local) implementations are available, that will take a screenshot of the google home page, and oextract the google logo from it.
+
 # Developping a scrapper
 
-Look at the source code for demo examples - see AmazonFr and others ...
-
-Then,
-
-* Extend the WebpageBasic webpage implementation, by specifying the xpath strings of the site you want to scrap.
-* Specify the specific Dparsing class to transform each selected webelemnt into a MongoDocument (see examples)
-* Process the page
+Look at the various source code demo examples in the startup package.
