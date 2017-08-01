@@ -5,32 +5,32 @@ selenium webdriver or with a "standalone server" hub/grid.
 
 The selenium grid is best run within a set of docker containers - see proposed scripts.
 
-Options are available to skip loading images, which very significantly improves scrapping
+Options are available to skip loading images, which very significantly improves scrapping performance.
 
 See the tests for demos on how to use
 
 # General architecture principles
 
-As much default behaviour and settings as possible are alreday implemented by default. You just need to customize the specificities for your site. If you do not specify an option, sensible defalt behaviour should hapen.
+As often as possible, default behaviour and settings  are alreday implemented. You just need to customize the specificities for the website you wish to scrap. If you do not specify an option, sensible default behaviour should happen.
+
+The Drivers class provides static metdos to obtain a selenium webdriver instance, that will be provided to the scrapper (generator).
 
 Most scrappers (called 'generators', see AmazonFR example) will extend the WebpageBasic generator, by :
 
 * defining the specific document parser (that translates a WebElement into a MongoDocument object)
 * overriding the various xPath strings that caractérize the target scrapping (see javadoc for WebpageBasic)
 
-The Drivers class provides static metdos to obtain a selenium webdriver instance. Managing the webdriver is handled outside the scope of the scrapper (generator).
-
-Then, the scrapping is done by  in 6 steps :
+Once you have your generator class for the site you want to scrap, scrapping involves 6 steps :
 
 1. get a Webdriver by calling Drivers.getDriver with the relevant configuration (or reuse existing instance)
-2. construct an instance a WebpageBasic or of a subclass you designed
+2. construct an instance a WebpageBasic or of the scrapping subclass you designed
 3. set the desired specificities of your site :
 * xpath string, if you did not subclass. These strings are used to specify what to look for as a document, what to expect (detect page load), is there a next page and how to get it, how to ensure previous page has disappeared before strating to parse again, etc ... (see javadoc and demos) 
 * a custom documentParser that transforms the provided WebElement into a parsed MongoDocument oject.
-* optionnally, a Limiter object, that will set limits in terms of elaŝed time, nbr of pages, nbr of documents, etc. (see LimiterBasic object)
-4. call the init() method to initiate the page
-5. call the processDocuments method, to trigger the processing, specifying what you want to do with each parsed document with a document processor (or a lambda function). Default DocumentProcessor implementations are available to just print, or save in a mongo collection.
-6. close the Webpage implementation (This will close the WebDriver), or close the Webdriver directly.
+* optionnally, a Limiter object, that will set limits in terms of elaŝed time, nbr of pages, nbr of documents, etc. (see LimiterBasic object, or build your own)
+4. call the init() method to initiate the page (caution : all setting must be done BEFORE calling init()).
+5. call the processDocuments method, to trigger the processing, specifying what you want to do with each parsed document, providing a document processor (or a lambda function). Default DocumentProcessor implementations are available to just print documents to standard output, or save them in a mongo collection.
+6. optionnally, close the Webpage implementation (this will close the WebDriver), or close the Webdriver directly.
 
 
 # Known bugs and limitations
