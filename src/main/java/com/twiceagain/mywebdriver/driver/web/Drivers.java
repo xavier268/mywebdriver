@@ -74,7 +74,7 @@ public class Drivers {
                 // LoadGeckodriver if needed
                 Config.installGeckoDriver();
                 // Set geckodriver full absolute path
-                System.setProperty("webdriver.gecko.driver", Config.geckodriver_absolute_path);
+                System.setProperty("webdriver.gecko.driver", Config.geckodriverPath);
                 wd = new FirefoxDriver(config.getDesiredCapabilities());
                 // Grid instance
             } else {
@@ -248,7 +248,7 @@ public class Drivers {
          * Path to a geckodriver, compatible with local firefox version AND
          * selenium version.
          */
-        public static String geckodriver_absolute_path = null;
+        protected static String geckodriverPath = null;
 
         /**
          * Do not display images ?
@@ -334,10 +334,10 @@ public class Drivers {
 
             // If already loaded, do nothing, excpet updating the path.
             if ( gf.exists()) {
-                LOG.log(Level.INFO, "Already loaded geckodriver file : {0}", geckodriver_absolute_path);
-                if(geckodriver_absolute_path == null ) {                    
-                    geckodriver_absolute_path = gf.getAbsolutePath();
-                    LOG.log(Level.INFO, "Updated geckodriver installation path : {0}", geckodriver_absolute_path);
+                LOG.log(Level.INFO, "Already loaded geckodriver file : {0}", geckodriverPath);
+                if(geckodriverPath == null ) {                    
+                    geckodriverPath = gf.getAbsolutePath();
+                    LOG.log(Level.INFO, "Updated geckodriver installation path : {0}", geckodriverPath);
                 }
                 return;
             } 
@@ -362,8 +362,8 @@ public class Drivers {
 
             // Make file executable.
             gf.setExecutable(true, true);
-            geckodriver_absolute_path = gf.getAbsolutePath();
-            LOG.log(Level.INFO, "Geckodriver installed in {0}", geckodriver_absolute_path);
+            geckodriverPath = gf.getAbsolutePath();
+            LOG.log(Level.INFO, "Geckodriver installed in {0}", geckodriverPath);
 
         }
 
